@@ -16,15 +16,16 @@ typedef struct s_textures
 	char *so;
 	char *we;
 	char *ea;
-	int c;
-	int f;
+	unsigned int c;
+	unsigned int f;
 } t_textures;
 
 typedef struct s_map
 {
 	char **map;
-	int y;
-	int x;
+	int map_start;
+	int rows;
+	int cols;
 } t_map;
 
 typedef struct s_data
