@@ -1,4 +1,4 @@
-#include "../includes/cube.h"
+#include "cub3d.h"
 
 int check_format(char *map)
 {
@@ -196,9 +196,10 @@ void fill_map(t_map *map, char *info)
 			y++;
 		}
 	}
+	map->map[y] = NULL;
 }
 
-void split_info(char *info)
+char **split_info(char *info)
 {
 	t_map *map;
 	t_textures *txtrs;
@@ -219,15 +220,15 @@ void split_info(char *info)
 	}*/
 	printf("%s\n", txtrs->so);
 	printf("%s\n", txtrs->ea);
+	return (map->map);
 }
 
-int treat_map(char *map)
+char **treat_map(char *map)
 {
 	int fd;
 
 	if(!check_format(map))
-		return (0);
+		return (NULL);
 	fd = open(map, O_RDONLY);
-	split_info(read_map(fd));
-	return (1);
+	return split_info(read_map(fd));
 }
