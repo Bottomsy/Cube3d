@@ -2,9 +2,9 @@ CC = cc
 
 CFLAGS = -Wall -Wextra
 
-MLX_FLAGS = -lmlx -L/usr/include/minilibx-linux/ -lXext -lX11
+MLX_FLAGS = -lmlx -L/mnt/c/Users/azert/Desktop/CUBE/CUBE3D/mlx/ -lm -lXext -lX11
 
-SRC = parsing/parsing1.c main.c
+SRC = mlx.c rend.c parsing1.c main.c
 
 OBJS = $(SRC:.c=.o)
 

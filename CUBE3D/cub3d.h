@@ -12,10 +12,10 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-# define HEIGHT 600
-# define WIDTH 800
-# define COLS 30
-# define ROWS 30
+# define HEIGHT 900
+# define WIDTH 1200
+# define COLS 60
+# define ROWS 60
 
 typedef struct s_textures
 {
@@ -55,26 +55,37 @@ typedef struct	s_data {
 	int		**grid;
 }				t_data;
 
+typedef struct s_ray
+{
+	float hitx;
+	float hity;
+	float length;
+}	t_ray;
+
 typedef struct s_player
 {
-    int px;
-    int py;
+    float px;
+    float py;
     float angle;
     int last_mouse_x;
     t_data *img;
+    char dir;
+    char dor;
 }				t_player;
 
 
 
 /*                                        MLX HELPER                                                          */
 void   mlx_start(t_data *img);
-void   my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void   my_mlx_pixel_put(t_data *data, float x, float y, int color);
 
+int loop_hook(t_player *player);
+int key_release(int code, t_player *player);
 /*                                        DRAWING FUNCTIONS                                                    */
 void draw_map(t_data *img, char **map);
-void draw_player(t_player *player, int x0, int y0, int radius, int color);
+void draw_player(t_player *player, float x0, float y0, int radius, int color);
 void draw_square(t_data *data, int x, int y, int size);
-void draw_rays(t_player *player, int px, int py);
+void draw_rays(t_player *player, float px, float py);
 
 /*                                        INPUT HANDLING                                                       */
 int   keypress(int keycode, t_player *player);

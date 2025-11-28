@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-void draw_player(t_player *player, int x0, int y0, int radius, int color) // temporary 
+void draw_player(t_player *player, float x0, float y0, int radius, int color) // temporary 
 {
     int x = radius;
     int y = 0;
@@ -42,14 +42,14 @@ void draw_map(t_data *img, char **map)
 		while (map[i][j])
 		{
 			if (map[i][j] == '1')
-                fill_cell(img,img->grid,COLS,ROWS,i,j,0x00FF0000);
-            j++;
+                		fill_cell(img,img->grid,COLS,ROWS,i,j,0x00FF0000);
+			j++;
 		}
 		i++;
 	}
 }
 
-void draw_rays(t_player *player, int px, int py)
+void draw_rays(t_player *player, float px, float py)
 {
     for (int i = 0; i < 20; i++)
     {
@@ -87,41 +87,51 @@ void draw_square(t_data *img, int x, int y, int len)
 int keypress(int code, t_player *player)
 {
 	if (code == 119)
-    {
-        player->px += cos(player->angle) * 20;
-        player->py += sin(player->angle) * 20;
+	{
+		player->dir = 1;
+      		//printf("front\n");  
+	//player->px += cos(player->angle) * 2.5;
+        //player->py += sin(player->angle) * 2.5;
         // Add bounds checking
-        if (player->px < 10) player->px = 10;
+        /*if (player->px < 10) player->px = 10;
         if (player->px > WIDTH - 10) player->px = WIDTH - 10;
         if (player->py < 10) player->py = 10;
-        if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
+        if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;*/
     }
     else if (code == 115) 
     {
-        player->px -= cos(player->angle) * 20;
-        player->py -= sin(player->angle) * 20;
+	    player->dir = -1;
+        //player->px -= cos(player->angle) * 2.5;
+        //player->py -= sin(player->angle) * 2.5;
         // Add bounds checking
-        if (player->px < 10) player->px = 10;
+        /*if (player->px < 10) player->px = 10;
         if (player->px > WIDTH - 10) player->px = WIDTH - 10;
         if (player->py < 10) player->py = 10;
-        if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
+        if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;*/
     }
     else if (code == 97) // A key
-        player->angle -= 0.2; // Rotate left
+        player->dor = -1; // Rotate left
     else if (code == 100) // D key
-        player->angle += 0.2; // Rotate right
+        player->dor = 1; // Rotate right
     else if (code == 65307) // ESC key
     {
         exit(0);
     }
     
-    memset(player->img->addr, 0, HEIGHT * player->img->line_length); //i guess i can to this with mlx_destroy_image
-    draw_map(player->img, player->img->map);
-    draw_player(player, player->px, player->py, 10, 0x00FF0000);
-	draw_grid(player->img, COLS, ROWS, 0x00FFFFFF);
-    mlx_put_image_to_window(player->img->mlx, player->img->win, player->img->img, 0, 0);
-
     return 0;
+}
+
+int key_release(int code, t_player *player)
+{
+    if (code == 119)
+	    player->dir = 0;
+    if(code == 115)
+	    player->dir = 0;
+    else if (code == 97) // A key
+        player->dor = 0; // Rotate left
+    else if (code == 100) // D key
+        player->dor = 0; // Rotate right
+    return (0);
 }
 
 int mouse_move(int x, int y, t_player *player)
@@ -201,4 +211,38 @@ void draw_grid(t_data *img, int cols, int rows, int color)
         if (y >= HEIGHT) y = HEIGHT - 1;
         draw_horizontal_line(img, y, color);
     }
+}
+
+int loop_hook(t_player *player)
+{
+	if(player->dir == 1)
+	{
+		player->px += cos(player->angle) * 0.5;
+        	player->py += sin(player->angle) * 0.5;
+		if (player->px < 10) player->px = 10;
+        	if (player->px > WIDTH - 10) player->px = WIDTH - 10;
+        	if (player->py < 10) player->py = 10;
+        	if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
+	}
+	if(player->dir == -1)
+	{
+        	player->px -= cos(player->angle) * 0.5;
+        	player->py -= sin(player->angle) * 0.5;
+		if (player->px < 10) player->px = 10;
+        	if (player->px > WIDTH - 10) player->px = WIDTH - 10;
+        	if (player->py < 10) player->py = 10;
+        	if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
+	
+	}
+	if(player->dor == 1)
+		player->angle += 0.01;
+	if(player->dor == -1)
+		player->angle -= 0.01;
+	memset(player->img->addr, 0, HEIGHT * player->img->line_length); //i guess i can to this with mlx_destroy_image
+    	draw_map(player->img, player->img->map);
+    	draw_player(player, player->px, player->py, 10, 0x00FF0000);
+        draw_grid(player->img, COLS, ROWS, 0x00FFFFFF);
+    	mlx_put_image_to_window(player->img->mlx, player->img->win, player->img->img, 0, 0);
+	//printf("dir = %d\n", player->dir);
+	return (0);
 }
