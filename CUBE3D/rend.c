@@ -85,7 +85,6 @@ void vget_step(t_player *player, t_ray *ray, int i)
 	ray[i].vystep = ray[i].vxstep * tan(ray[i].angle);
 }
 
-
 void hget_step(t_player *player, t_ray *ray, int i)
 {
 	if(ray[i].angle > PI)
@@ -147,23 +146,23 @@ void hget_hit(t_player *player, t_ray *ray, int i)
 	ray[i].hhitx = ray[i].hfirstx;
 	while(1)
 	{
-		if ((ray[i].hhity < 0) || (ray[i].hhitx < 0))
+		if ((ray[i].hhity < 0) || (ray[i].hhitx < 0)) 
         		break;
 		if(ray[i].angle > PI)
 		{
-			if ((floor(ray[i].hhity / TILESIZE) + 1 >= ROWS) || (floor(ray[i].hhitx / TILESIZE) + 1 >= COLS))
+			if ((floor(ray[i].hhity / TILESIZE) + 1 >= player->map->rows) || (floor(ray[i].hhitx / TILESIZE) + 1 >= player->map->cols))
         			break;	
 			if(player->img->map[(int)(floor(ray[i].hhity) / TILESIZE)][(int)floor(ray[i].hhitx) / TILESIZE] == '1')
 				break;
 		}
 		else
 		{
-			if ((floor(ray[i].hhity / TILESIZE) + 1 >= ROWS) || (floor(ray[i].hhitx / TILESIZE) + 1 >= COLS))
+			if ((floor(ray[i].hhity / TILESIZE) + 1 >= player->map->rows) || (floor(ray[i].hhitx / TILESIZE) + 1 >= player->map->cols))
         			break;	
 			if(player->img->map[(int)(floor(ray[i].hhity) / TILESIZE)][(int)floor(ray[i].hhitx) / TILESIZE] == '1')
 				break;
 		}
-		my_mlx_pixel_put(player->img, ray[i].hhitx, ray[i].hhity, 0xFF0000);
+		//my_mlx_pixel_put(player->img, ray[i].hhitx, ray[i].hhity, 0xFF0000);
                 ray[i].hhity += ray[i].hystep;
                 ray[i].hhitx += ray[i].hxstep;
 
@@ -180,19 +179,19 @@ void vget_hit(t_player *player, t_ray *ray, int i)
                         break;
                 if(ray[i].angle > PI/2 && ray[i].angle < 3*PI/2)
                 {
-                        if ((floor(ray[i].vhity / TILESIZE) + 1 >= ROWS) || (floor(ray[i].vhitx / TILESIZE) + 1 >= COLS))
+                        if ((floor(ray[i].vhity / TILESIZE) + 1 >= player->map->rows) || (floor(ray[i].vhitx / TILESIZE) + 1 >= player->map->cols))
                                 break;
                         if(player->img->map[(int)(floor(ray[i].vhity) / TILESIZE)][(int)floor(ray[i].vhitx) / TILESIZE] == '1')
                                 break;
                 }
                 else
                 {
-                        if ((floor(ray[i].vhity / TILESIZE) + 1 >= ROWS) || (floor(ray[i].vhitx / TILESIZE) + 1 >= COLS))
+                        if ((floor(ray[i].vhity / TILESIZE) + 1 >= player->map->rows) || (floor(ray[i].vhitx / TILESIZE) + 1 >= player->map->cols))
                                 break;
                         if(player->img->map[(int)(floor(ray[i].vhity) / TILESIZE)][(int)floor(ray[i].vhitx) / TILESIZE] == '1')
                                 break;
                 }
-                my_mlx_pixel_put(player->img, ray[i].vhitx, ray[i].vhity, 0xFF0000);
+                //my_mlx_pixel_put(player->img, ray[i].vhitx, ray[i].vhity, 0xFF0000);
                 ray[i].vhity += ray[i].vystep;
                 ray[i].vhitx += ray[i].vxstep;
         }
@@ -204,12 +203,10 @@ void compare_inter(t_player *player, t_ray *ray, int i)
         float vdy = abs(ray[i].vhity - player->py);
         float hdx = abs(ray[i].hhitx - player->px);
         float hdy = abs(ray[i].hhity - player->py);
-        float hd = sqrt(hdx * hdx + hdy * hdy);
-        float vd = sqrt(vdx * vdx + vdy * vdy);
-        if(hd < vd)
-                ray[i].nearest = hd;
+        if(sqrt(hdx * hdx + hdy * hdy) < sqrt(vdx * vdx + vdy * vdy))
+                ray[i].nearest = sqrt(hdx * hdx + hdy * hdy);
         else
-                ray[i].nearest = vd;
+                ray[i].nearest = sqrt(vdx * vdx + vdy * vdy);
 }
 
 void hdda(t_player *player, t_ray *ray)
@@ -230,6 +227,61 @@ void hdda(t_player *player, t_ray *ray)
 		compare_inter(player, ray, i);
 		my_mlx_pixel_put(player->img, ray[i].vhitx, ray[i].vhity, 0xFF0000);
 		rot_angle += (FOV / player->ray_num);
+		i++;
+	}
+}
+int shade_color_gamma(int color, float factor)
+{
+    if (factor < 0) factor = 0;
+    if (factor > 1) factor = 1;
+
+    int r = ((color >> 16) & 0xFF) * factor;
+    int g = ((color >> 8) & 0xFF) * factor;
+    int b =  (color & 0xFF) * factor;
+
+    return (r << 16) | (g << 8) | b;
+}
+
+void draw_walls(t_player *player, t_ray *ray)
+{
+	int i;
+	int j;
+	float dpp;
+	int wh;
+	int x;
+	int y;
+	int k;
+
+	int color = 0xFF00FF;
+	i = 0;
+	dpp = (WIDTH / 2) / tan(FOV/2);
+	while(i < player->ray_num)
+	{
+		color = shade_color_gamma(0xFF00FF, (100 / ray[i].nearest));
+		wh = (dpp / (ray[i].nearest * cos(ray[i].angle - player->angle))) * TILESIZE;
+		
+		x = (i * STRIPESIZE);
+		if(HEIGHT >= wh)
+			y = (HEIGHT - wh) / 2;
+		else 
+			y = 0;
+		k = 0;
+		while(k < STRIPESIZE)
+		{
+			j = 0;
+			while(j < y)
+			{
+				my_mlx_pixel_put(player->img, x + k, j, 0x5511FF);
+				j++;
+			}
+			j = 0;
+			while(j < wh)
+			{
+				my_mlx_pixel_put(player->img, x + k, y + j, color);
+				j++;
+			}
+			k++;
+		}
 		i++;
 	}
 }
@@ -301,7 +353,7 @@ void draw_square(t_data *img, int x, int y, int color)
 		j = 1;
 		while(j < TILESIZE - 1)
 		{
-			my_mlx_pixel_put(img, x + i, y + j, color);
+			//my_mlx_pixel_put(img, x + i, y + j, color);
 			j++;
 		}
 		i++;
@@ -339,6 +391,7 @@ int keypress(int code, t_player *player)
         player->dor = 1; // Rotate right
     else if (code == 65307) // ESC key
     {
+	ft_free(player);
         exit(0);
     }
     
@@ -418,8 +471,8 @@ void draw_grid(t_player *player, t_data *img)
 				draw_square(img, x, y, 0x000000);
 			c++;
 		}
-		printf("r = %d, c = %d\n", r, c);
-		printf("rows = %d, cols = %d\n", player->map->rows, player->map->cols);
+		//printf("r = %d, c = %d\n", r, c);
+		//printf("rows = %d, cols = %d\n", player->map->rows, player->map->cols);
 		r++;
 	}
 
@@ -484,7 +537,8 @@ int loop_hook(t_player *player)
 	memset(player->img->addr, 0, HEIGHT * player->img->line_length); //i guess i can to this with mlx_destroy_image
         draw_grid(player, player->img);
     	draw_player(player, player->px, player->py, 10, 0x00FF0000, player->ray);
-    	mlx_put_image_to_window(player->img->mlx, player->img->win, player->img->img, 0, 0);
+    	draw_walls(player, player->ray);
+	mlx_put_image_to_window(player->img->mlx, player->img->win, player->img->img, 0, 0);
 	//printf("dir = %d\n", player->dir);
 	return (0);
 }

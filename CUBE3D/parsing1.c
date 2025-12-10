@@ -113,6 +113,50 @@ int get_rgb(char *info, unsigned int *rgb, int *elements)
 	return i;
 }
 
+void ft_free(t_player *player)
+{
+    if (player->ray)
+        free(player->ray);
+
+    if (player->img) {
+
+                if (player->img->map) {
+                        int r = 0;
+                        while (player->img->map[r]) {
+                                free(player->img->map[r]);
+                                r++;
+                        }
+                        free(player->img->map);
+                }
+        }
+
+        if (player->img->img && player->img->mlx)
+            mlx_destroy_image(player->img->mlx, player->img->img);
+
+        if (player->img->win && player->img->mlx)
+            mlx_destroy_window(player->img->mlx, player->img->win);
+
+        if (player->img->mlx)
+            mlx_destroy_display(player->img->mlx);
+
+        if (player->img->mlx)
+            free(player->img->mlx);
+
+    if (player->textures) {
+        if (player->textures->no)
+                 { free(player->textures->no); player->textures->no = NULL; }
+        if (player->textures->so)
+                 { free(player->textures->so); player->textures->so = NULL; }
+        if (player->textures->we)
+                 { free(player->textures->we); player->textures->we = NULL; }
+        if (player->textures->ea)
+                 { free(player->textures->ea); player->textures->ea = NULL; }
+    }
+        free(player->textures);
+        free(player->map);
+}
+ 
+
 int fill_textures(t_textures *txtrs, char *info)
 {
 	int i;
@@ -221,6 +265,8 @@ char **split_info(t_player *player, char *info)
 	printf("%s\n", txtrs->so);
 	printf("%s\n", txtrs->ea);
 	player->map = map;
+	player->textures = txtrs;
+        free(info);
 	return (map->map);
 }
 
@@ -342,22 +388,22 @@ void print_error(int flag)
 void get_player_info(t_player *player, char **map)
 {
 	int i = 0, j, pos = 0;
-    while (map[i])
+    while (i < player->map->rows)
     {
         j = 0;
-        while (map[i][j])
+        while (j < player->map->cols)
         {
-			if (pos == 2)
-				print_error(1);
+	    if (pos == 2)
+		print_error(1);
             if ( map[i][j] == 'S' || map[i][j] == 'N' || map[i][j] == 'W' || map[i][j] == 'E')
             {
-				player->angle = get_angle(map[i][j]);
-				player->px = (float)j * TILESIZE;
-				player->py = (float)i * TILESIZE;
-				pos++;
+			player->angle = get_angle(map[i][j]);
+			player->px = ((float)j * TILESIZE) + (TILESIZE / 2);
+			player->py = ((float)i * TILESIZE) + (TILESIZE / 2);
+			pos++;
             }
-				j++;
-		}
+			j++;
+	}
         i++;
     }
 	if (pos == 0)

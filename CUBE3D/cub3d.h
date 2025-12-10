@@ -15,8 +15,6 @@
 # define TILESIZE 30
 # define HEIGHT 900
 # define WIDTH 1600
-# define COLS 25
-# define ROWS 15
 # define FOV 1.0472
 # define STRIPESIZE 4
 # define PI 3.14159265358979323846
@@ -88,6 +86,7 @@ typedef struct s_player
     int ray_num;
     t_map *map;
     t_ray *ray;
+    t_textures *textures;
 }	t_player;
 
 /*typedef struct s_ray
@@ -141,7 +140,8 @@ void draw_grid(t_player *player, t_data *img);
 /*                                        MAP PARSING                                                         */
 char **treat_map(t_player *player, char *map);
 int check_format(char *map);
-
+// free
+void ft_free(t_player *player);
 
 void init_player(t_player *player, t_data *img, t_ray **ray);
 void get_player_info(t_player *player, char **map);
