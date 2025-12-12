@@ -30,7 +30,6 @@ void draw_player(t_player *player, float x0, float y0, int radius, int color, t_
         }
     }
 
-    hdda(player, ray);
 }
 
 void normalizeangle(float *angle)
@@ -204,9 +203,17 @@ void compare_inter(t_player *player, t_ray *ray, int i)
         float hdx = abs(ray[i].hhitx - player->px);
         float hdy = abs(ray[i].hhity - player->py);
         if(sqrt(hdx * hdx + hdy * hdy) < sqrt(vdx * vdx + vdy * vdy))
+		{
+				ray[i].hitx = ray[i].hhitx;
+				ray[i].hity = ray[i].hhity;
                 ray[i].nearest = sqrt(hdx * hdx + hdy * hdy);
-        else
+		}
+				else
+		{
+				ray[i].hitx = ray[i].vhitx;
+				ray[i].hity = ray[i].vhity;
                 ray[i].nearest = sqrt(vdx * vdx + vdy * vdy);
+		}
 }
 
 void hdda(t_player *player, t_ray *ray)
@@ -221,11 +228,11 @@ void hdda(t_player *player, t_ray *ray)
 		normalizeangle(&ray[i].angle);
 		hget_step(player, ray, i);
 		hget_hit(player, ray, i);
-		my_mlx_pixel_put(player->img, ray[i].hhitx, ray[i].hhity, 0xFF0000);
+		// my_mlx_pixel_put(player->img, ray[i].hhitx, ray[i].hhity, 0xFF0000);
 		vget_step(player, ray, i);
 		vget_hit(player, ray, i);
 		compare_inter(player, ray, i);
-		my_mlx_pixel_put(player->img, ray[i].vhitx, ray[i].vhity, 0xFF0000);
+		// my_mlx_pixel_put(player->img, ray[i].vhitx, ray[i].vhity, 0xFF0000);
 		rot_angle += (FOV / player->ray_num);
 		i++;
 	}
@@ -235,15 +242,37 @@ int shade_color_gamma(int color, float factor)
     if (factor < 0) factor = 0;
     if (factor > 1) factor = 1;
 
-    int r = ((color >> 16) & 0xFF) * factor;
+    int r = ((color >> 16) & 0xFF)* factor;
     int g = ((color >> 8) & 0xFF) * factor;
     int b =  (color & 0xFF) * factor;
 
     return (r << 16) | (g << 8) | b;
 }
 
+int pick_text_color(t_player *player,int i, int x, int y)
+{
+	if (player->ray[i].hitx == player->ray[i].hhitx && player->ray[i].hity == player->ray[i].hhity)
+	{
+		if ((player->py - player->ray[i].hity) > 0)
+		return (mlx_get_color(&player->img[2], x ,y));
+			else
+		return (mlx_get_color(&player->img[1], x ,y));
+		
+	}
+	else
+	{
+		if ((player->px - player->ray[i].hitx) > 0)
+			return (mlx_get_color(&player->img[4], x ,y));
+		else
+			return (mlx_get_color(&player->img[3], x ,y));
+
+	}
+
+}
+
 void draw_walls(t_player *player, t_ray *ray)
 {
+    hdda(player, ray);
 	int i;
 	int j;
 	float dpp;
@@ -252,34 +281,58 @@ void draw_walls(t_player *player, t_ray *ray)
 	int y;
 	int k;
 
-	int color = 0xFF00FF;
 	i = 0;
 	dpp = (WIDTH / 2) / tan(FOV/2);
+	int texturex = 0;
+	int texturey = 0;
 	while(i < player->ray_num)
 	{
-		color = shade_color_gamma(0xFF00FF, (100 / ray[i].nearest));
+		float wall_offset;
+        
+        if (ray[i].hitx == ray[i].hhitx && ray[i].hity == ray[i].hhity)
+            wall_offset = (int)ray[i].hitx % TILESIZE; // Horizontal wall
+        else
+            wall_offset = (int)ray[i].hity % TILESIZE; // Vertical wall
+        
+        
+        // Map to texture width (0-63)
+        texturex = (int)((wall_offset / TILESIZE) * TILESIZE);
 		wh = (dpp / (ray[i].nearest * cos(ray[i].angle - player->angle))) * TILESIZE;
-		
-		x = (i * STRIPESIZE);
-		if(HEIGHT >= wh)
-			y = (HEIGHT - wh) / 2;
-		else 
-			y = 0;
-		k = 0;
-		while(k < STRIPESIZE)
-		{
-			j = 0;
-			while(j < y)
+			
+			x = (i * STRIPESIZE);
+			if(HEIGHT >= wh)
+				y = (HEIGHT - wh) / 2;
+			else 
+				y = 0;
+			k = 0;
+			
+			while(k < STRIPESIZE)
 			{
-				my_mlx_pixel_put(player->img, x + k, j, 0x5511FF);
-				j++;
-			}
-			j = 0;
-			while(j < wh)
-			{
-				my_mlx_pixel_put(player->img, x + k, y + j, color);
-				j++;
-			}
+				j = 0;
+				while(j < y)
+				{
+					my_mlx_pixel_put(player->img, x + k, j, player->textures->c);
+					j++;
+				}
+				j = 0;
+				while(j < wh )
+				{
+					 if (wh > HEIGHT)
+                 	   texturey = (((j + (wh - HEIGHT) / 2) * 64) / wh);
+                	else
+                  	  texturey = ((j * 64) / wh);
+
+					int color =  pick_text_color(player,i, texturex, texturey);
+					color = shade_color_gamma(color, (100 / ray[i].nearest));
+					my_mlx_pixel_put(player->img, x + k, y + j, color);
+
+					j++;
+				}
+				while( j + y < HEIGHT)
+				{
+					my_mlx_pixel_put(player->img, x + k, y + j, player->textures->f);
+					j++;
+				}
 			k++;
 		}
 		i++;
@@ -535,9 +588,9 @@ int loop_hook(t_player *player)
 	if(player->dor == -1)
 		player->angle -= 0.009;
 	memset(player->img->addr, 0, HEIGHT * player->img->line_length); //i guess i can to this with mlx_destroy_image
-        draw_grid(player, player->img);
-    	draw_player(player, player->px, player->py, 10, 0x00FF0000, player->ray);
-    	draw_walls(player, player->ray);
+	// draw_grid(player, player->img);
+	// draw_player(player, player->px, player->py, 10, 0x00FF0000, player->ray);
+	draw_walls(player, player->ray);
 	mlx_put_image_to_window(player->img->mlx, player->img->win, player->img->img, 0, 0);
 	//printf("dir = %d\n", player->dir);
 	return (0);

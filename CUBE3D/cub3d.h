@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-# define TILESIZE 30
+# define TILESIZE 64
 # define HEIGHT 900
 # define WIDTH 1600
 # define FOV 1.0472
@@ -57,6 +57,8 @@ typedef struct	s_data {
 
 typedef struct s_ray
 {
+	float	hitx;
+	float	hity;
 	float	vhitx;
 	float	vhity;
 	float	hhitx;
@@ -111,8 +113,11 @@ typedef struct s_player
 
 
 /*                                        MLX HELPER                                                          */
-void   mlx_start(t_data *img);
+void   mlx_start(t_data *img, int width, int height);
+void   mlx_tstart(t_data img[5], int width, int height);
 void   my_mlx_pixel_put(t_data *data, float x, float y, int color);
+unsigned int mlx_get_color(t_data *data, int x, int y);
+void my_mlx_xpm_file_to_image(t_data *img, char *path);
 
 void normalizeangle(float *angle);
 void hget_step(t_player *player, t_ray *ray, int i);
@@ -143,13 +148,13 @@ int check_format(char *map);
 // free
 void ft_free(t_player *player);
 
-void init_player(t_player *player, t_data *img, t_ray **ray);
+void init_player(t_player *player, t_data img[5], t_ray **ray);
 void get_player_info(t_player *player, char **map);
 float get_angle(char d);
 void print_error(int flag);
 int check_map(char **map);
 int check_boundries(char **map);
 int flfl(char **map, int y, int x);
-
+void init_textures(t_player *player, t_data img[5]);
 
 #endif

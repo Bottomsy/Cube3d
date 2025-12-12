@@ -63,7 +63,7 @@ int get_path(char *info, char **path, int *elements)
 	i++;
 	while(info[i + k] != '\n')
 		k++;
-	(*path) = malloc(k);
+	(*path) = malloc(k + 1);
 	k = 0;
 	while(info[i] != '\n')
 		(*path)[k++] = info[i++];
@@ -118,29 +118,35 @@ void ft_free(t_player *player)
     if (player->ray)
         free(player->ray);
 
-    if (player->img) {
+	
 
-                if (player->img->map) {
-                        int r = 0;
-                        while (player->img->map[r]) {
-                                free(player->img->map[r]);
-                                r++;
-                        }
-                        free(player->img->map);
-                }
+    if (player->map) {
+        if (player->map->map) {
+            int r = 0;
+            while (player->map->map[r]) {
+                free(player->map->map[r]);
+                r++;
+            }
+            free(player->map->map);
         }
+        free(player->map);
+    }
+		
+	for (int i = 0; i < 5; i++) {
 
-        if (player->img->img && player->img->mlx)
-            mlx_destroy_image(player->img->mlx, player->img->img);
+		if (player->img[i].img && player->img[i].mlx)
+			mlx_destroy_image(player->img[i].mlx, player->img[i].img);
 
-        if (player->img->win && player->img->mlx)
-            mlx_destroy_window(player->img->mlx, player->img->win);
+		if (player->img[i].win && player->img[i].mlx)
+			mlx_destroy_window(player->img[i].mlx, player->img[i].win);
 
-        if (player->img->mlx)
-            mlx_destroy_display(player->img->mlx);
+		if (player->img[i].mlx)
+			mlx_destroy_display(player->img[i].mlx);
 
-        if (player->img->mlx)
-            free(player->img->mlx);
+		if (player->img[i].mlx)
+			free(player->img[i].mlx);
+	}
+	
 
     if (player->textures) {
         if (player->textures->no)
@@ -152,8 +158,7 @@ void ft_free(t_player *player)
         if (player->textures->ea)
                  { free(player->textures->ea); player->textures->ea = NULL; }
     }
-        free(player->textures);
-        free(player->map);
+	free(player->textures);
 }
  
 
@@ -273,11 +278,13 @@ char **split_info(t_player *player, char *info)
 char **treat_map(t_player *player, char *map)
 {
 	int fd;
-
+	char **res;
 	if(!check_format(map))
 		return (NULL);
 	fd = open(map, O_RDONLY);
-	return split_info(player, read_map(fd));
+	res = split_info(player, read_map(fd));
+	close(fd);
+	return res;
 }
 int flfl(char **map, int y, int x)
 {
@@ -365,13 +372,13 @@ int check_map(char **map)
 float get_angle(char d)
 {
 	if (d == 'S')
-		return 270 * M_PI / 180;
+		return 270 * PI / 180;
 	else if (d == 'N')
-		return 90 * M_PI / 180;
+		return 90 * PI / 180;
 	else if (d == 'W')
-		return 180 * M_PI / 180;
+		return 180 * PI / 180;
 	else if (d == 'E')
-		return 0 * M_PI / 180;
+		return 0 * PI / 180;
 	return 0;
 }
 
@@ -410,10 +417,17 @@ void get_player_info(t_player *player, char **map)
 		print_error(2);
 }
 
-
-void init_player(t_player *player, t_data *img, t_ray **ray)
+void init_textures(t_player *player, t_data img[5])
 {
-	get_player_info(player, img->map);
+	my_mlx_xpm_file_to_image(&img[1],player->textures->no);
+	my_mlx_xpm_file_to_image(&img[2],player->textures->so);
+	my_mlx_xpm_file_to_image(&img[3],player->textures->ea);
+	my_mlx_xpm_file_to_image(&img[4],player->textures->we);
+}
+
+void init_player(t_player *player, t_data img[5], t_ray **ray)
+{
+	get_player_info(player, img[0].map);
 	player->img = img;
 	player->last_mouse_x = WIDTH / 2;
 	player->dir = 0;
