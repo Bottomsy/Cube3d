@@ -18,20 +18,18 @@ void mlx_start(t_data *img, int width,int  height)
                                                                 &img->endian);
 }
 
-void mlx_tstart(t_data img[5], int width,int  height)
+void mlx_tstart(t_data img[5])
 {
 	int i = 1;
 	while (i < 5)
 	{
 		img[i].mlx = mlx_init();
+		img[i].img = NULL;
+		img[i].addr = NULL;
 		img[i].win = NULL;
-		img[i].img = mlx_new_image(img[i].mlx, width, height);
-		img[i].addr = mlx_get_data_addr(img[i].img, &img[i].bits_per_pixel, &img[i].line_length,
-																	&img[i].endian);
 		img[i].map = NULL;
 		img[i].grid = NULL;
 		i++;
-
 	}
 }
 
