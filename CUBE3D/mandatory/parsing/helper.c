@@ -3,62 +3,84 @@
 void print_error(int flag)
 {
 	if (flag == 1)
-		printf("Error: Too many players on map\n");
+		printf(RED"Error: Too many players on map\n"RESET);
 	else if (flag == 2)
-		printf("Error: No players found on map\n");
+		printf(RED"Error: No players found on map\n"RESET);
 	exit(1);
 }
 
 void ft_free(t_player *player)
 {
+    int i;
+
+    i = 0;
     if (player->ray)
         free(player->ray);
+    ft_free_map(player->map);
+    ft_free_textures(player->textures);
+    while (i < 5)
+        ft_free_img(&player->img[i++]);
+	
+}
 
-    if (player->map) 
+void ft_free_map(t_map *map)
+{
+    if (map) 
     {
-        if (player->map->map) {
+        if (map->map) {
             int r = 0;
-            while (player->map->map[r])
+            while (map->map[r])
             {
-                free(player->map->map[r]);
+                free(map->map[r]);
                 r++;
             }
-            free(player->map->map);
+            free(map->map);
         }
-        free(player->map);
+        free(map);
     }
-
-    if (player->textures) {
-        if (player->textures->no)
-                 { free(player->textures->no); player->textures->no = NULL; }
-        if (player->textures->so)
-                 { free(player->textures->so); player->textures->so = NULL; }
-        if (player->textures->we)
-                 { free(player->textures->we); player->textures->we = NULL; }
-        if (player->textures->ea)
-                 { free(player->textures->ea); player->textures->ea = NULL; }
-                 free(player->textures);
-    }
-
-    if (player->img)
-    {
-        for (int i = 0; i < 5; i++)
-        {
-
-            if (player->img[i].img != NULL && player->img[i].mlx != NULL)
-                mlx_destroy_image(player->img[i].mlx, player->img[i].img);
-
-            if (player->img[i].win != NULL && player->img[i].mlx != NULL)
-                mlx_destroy_window(player->img[i].mlx, player->img[i].win);
-
-            if (player->img[i].mlx != NULL)
-                mlx_destroy_display(player->img[i].mlx);
-
-            if (player->img[i].mlx != NULL)
-                free(player->img[i].mlx);
-
-            
-        }
 }
-	
+
+void ft_free_textures(t_textures *textures)
+{
+    if (textures) {
+        if (textures->no)
+                 { free(textures->no); textures->no = NULL; }
+        if (textures->so)
+                 { free(textures->so); textures->so = NULL; }
+        if (textures->we)
+                 { free(textures->we); textures->we = NULL; }
+        if (textures->ea)
+                 { free(textures->ea); textures->ea = NULL; }
+                 free(textures);
+    }
+}
+void ft_free_info(char *info)
+{
+    if (info)
+        free(info);
+}
+void ft_free_img(t_data *img)
+{
+    if (img)
+    {
+        if (img->img != NULL && img->mlx != NULL)
+            mlx_destroy_image(img->mlx, img->img);
+
+        if (img->win != NULL && img->mlx != NULL)
+            mlx_destroy_window(img->mlx, img->win);
+
+        if (img->mlx != NULL)
+            mlx_destroy_display(img->mlx);
+
+        if (img->mlx != NULL)
+            free(img->mlx);
+    }
+}
+
+char **ft_free_parse(t_map *map, t_textures *textures, char *info)
+{
+    ft_free_map(map);
+    ft_free_textures(textures);
+    ft_free_info(info);
+    return NULL;
 }

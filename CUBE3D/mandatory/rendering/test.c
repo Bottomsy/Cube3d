@@ -1,36 +1,36 @@
 #include "../cub3d.h"
 
-// void draw_player(t_player *player, float x0, float y0, int radius, int color, t_ray *ray) // temporary 
-// {
-//     int x = radius;
-//     int y = 0;
-//     int err = 0;
+void draw_player(t_player *player, float x0, float y0, int radius, int color) // temporary 
+{
+    int x = radius;
+    int y = 0;
+    int err = 0;
 
-//     my_mlx_pixel_put(player->img, x0, y0, color);
-//     while (x >= y)
-//     {
-//         my_mlx_pixel_put(player->img, x0 + x, y0 + y, color);
-//         my_mlx_pixel_put(player->img, x0 + y, y0 + x, color);
-//         my_mlx_pixel_put(player->img, x0 - y, y0 + x, color);
-//         my_mlx_pixel_put(player->img, x0 - x, y0 + y, color);
-//         my_mlx_pixel_put(player->img, x0 - x, y0 - y, color);
-//         my_mlx_pixel_put(player->img, x0 - y, y0 - x, color);
-//         my_mlx_pixel_put(player->img, x0 + y, y0 - x, color);
-//         my_mlx_pixel_put(player->img, x0 + x, y0 - y, color);
+    my_mlx_pixel_put(player->img, x0, y0, color);
+    while (x >= y)
+    {
+        my_mlx_pixel_put(player->img, x0 + x, y0 + y, color);
+        my_mlx_pixel_put(player->img, x0 + y, y0 + x, color);
+        my_mlx_pixel_put(player->img, x0 - y, y0 + x, color);
+        my_mlx_pixel_put(player->img, x0 - x, y0 + y, color);
+        my_mlx_pixel_put(player->img, x0 - x, y0 - y, color);
+        my_mlx_pixel_put(player->img, x0 - y, y0 - x, color);
+        my_mlx_pixel_put(player->img, x0 + y, y0 - x, color);
+        my_mlx_pixel_put(player->img, x0 + x, y0 - y, color);
 
-//         y += 1;
-//         if (err <= 0)
-//         {
-//             err += 2*y + 1;
-//         }
-//         if (err > 0)
-//         {
-//             x -= 1;
-//             err -= 2*x + 1;
-//         }
-//     }
+        y += 1;
+        if (err <= 0)
+        {
+            err += 2*y + 1;
+        }
+        if (err > 0)
+        {
+            x -= 1;
+            err -= 2*x + 1;
+        }
+    }
 
-// }
+}
 
 // int mouse_move(int x, int y, t_player *player)
 // {

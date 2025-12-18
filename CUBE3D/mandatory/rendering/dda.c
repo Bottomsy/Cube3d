@@ -12,9 +12,13 @@ void hdda(t_player *player, t_ray *ray)
 		normalizeangle(&ray[i].angle);
 		hget_step(player, ray, i);
 		hget_hit(player, ray, i);
+		my_mlx_pixel_put(player->img, ray[i].hhitx, ray[i].hhity, 0xFF0000);
+
 		vget_step(player, ray, i);
 		vget_hit(player, ray, i);
 		compare_inter(player, ray, i);
+		my_mlx_pixel_put(player->img, ray[i].vhitx, ray[i].vhity, 0xFF0000);
+
 		rot_angle += (FOV / player->ray_num);
 		i++;
 	}
@@ -72,6 +76,8 @@ void hget_hit(t_player *player, t_ray *ray, int i)
 			if(player->img->map[(int)(floor(ray[i].hhity) / TILESIZE)][(int)floor(ray[i].hhitx) / TILESIZE] == '1')
 				break;
 		}
+		my_mlx_pixel_put(player->img, ray[i].hhitx, ray[i].hhity, 0xFF0000);
+
 		ray[i].hhity += ray[i].hystep;
 		ray[i].hhitx += ray[i].hxstep;
 
@@ -100,6 +106,8 @@ void vget_hit(t_player *player, t_ray *ray, int i)
                         if(player->img->map[(int)(floor(ray[i].vhity) / TILESIZE)][(int)floor(ray[i].vhitx) / TILESIZE] == '1')
                                 break;
                 }
+                my_mlx_pixel_put(player->img, ray[i].vhitx, ray[i].vhity, 0xFF0000);
+
                 ray[i].vhity += ray[i].vystep;
                 ray[i].vhitx += ray[i].vxstep;
         }

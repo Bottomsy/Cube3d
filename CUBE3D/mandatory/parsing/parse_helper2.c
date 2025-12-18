@@ -21,21 +21,27 @@ void get_player_info(t_player *player, char **map)
         j = 0;
         while (j < player->map->cols)
         {
-	    if (pos == 2)
-		print_error(1);
-            if ( map[i][j] == 'S' || map[i][j] == 'N' || map[i][j] == 'W' || map[i][j] == 'E')
-            {
-			player->angle = get_angle(map[i][j]);
-			player->px = ((float)j * TILESIZE) + (TILESIZE / 2);
-			player->py = ((float)i * TILESIZE) + (TILESIZE / 2);
-			pos++;
-            }
+			if (pos == 2)
+			{
+				ft_free(player);
+				print_error(1);
+			}
+			if ( map[i][j] == 'S' || map[i][j] == 'N' || map[i][j] == 'W' || map[i][j] == 'E')
+			{
+				player->angle = get_angle(map[i][j]);
+				player->px = ((float)j * TILESIZE) + (TILESIZE / 2);
+				player->py = ((float)i * TILESIZE) + (TILESIZE / 2);
+				pos++;
+			}
 			j++;
-	}
+}
         i++;
     }
 	if (pos == 0)
+	{
+		ft_free(player);
 		print_error(2);
+	}
 }
 
 int flfl(char **map, int y, int x)
@@ -45,9 +51,9 @@ int flfl(char **map, int y, int x)
     if (map[y] == NULL || map[y][x] == '\0')
 	    return 0;
 
-    if (map[y][x] == '1' || map[y][x] == 'V')
+    if (map[y][x] == '1' || map[y][x] == 'V' )
         return 0;
-    else if (map[y][x] == ' ' || map[y][x] == '0')
+    else if (map[y][x] == ' ')
    	 map[y][x] = 'V';
     else
 	    return 1;
@@ -60,7 +66,7 @@ int flfl(char **map, int y, int x)
     return 0;
 }
 
-int extract_num(char *info, unsigned char *val)
+int extract_num(char *info, int *val)
 {
 	char *num;
 	int i;
@@ -69,13 +75,25 @@ int extract_num(char *info, unsigned char *val)
 	i = 0;
 	k = 0;
 	while(info[i + k] != '\n' && info[i + k] != ',')
-		k++;
+	k++;
 	num = malloc(k + 1);
 	k = 0;
-	while(info[i] != '\n' && info[i] != ',')
+	while(info[i] != '\n' && info[i] != ',' && info[i] != ' ')
 		num[k++] = info[i++];
 	num[k] = '\0';
-	(*val) = (unsigned char)atoi(num);
+	k = 0;
+	if (num[k] < '0' || num[k] > '9')
+	{
+		free(num);
+		*val = -1;
+		if(info[i] == ',')
+			i++;
+		return i;
+	}
+	if (atoi(num) < 0 || atoi(num) > 255)
+		(*val) = -1;
+	else
+		(*val) = atoi(num);
 	free(num);
 	if(info[i] == ',')
 		i++;

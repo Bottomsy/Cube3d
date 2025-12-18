@@ -6,38 +6,38 @@ int loop_hook(t_player *player)
 	{
 		player->px += cos(player->angle) * 0.9;
         	player->py += sin(player->angle) * 0.9;
-		if (player->px < 10) player->px = 10;
-        	if (player->px > WIDTH - 10) player->px = WIDTH - 10;
-        	if (player->py < 10) player->py = 10;
-        	if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
+		// if (player->px < 10) player->px = 10;
+        // 	if (player->px > WIDTH - 10) player->px = WIDTH - 10;
+        // 	if (player->py < 10) player->py = 10;
+        // 	if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
 	}
 	if(player->dir == -1)
 	{
         	player->px -= cos(player->angle) * 0.9;
         	player->py -= sin(player->angle) * 0.9;
-		if (player->px < 10) player->px = 10;
-        	if (player->px > WIDTH - 10) player->px = WIDTH - 10;
-        	if (player->py < 10) player->py = 10;
-        	if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
+		// if (player->px < 10) player->px = 10;
+        // 	if (player->px > WIDTH - 10) player->px = WIDTH - 10;
+        // 	if (player->py < 10) player->py = 10;
+        // 	if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
 	
 	}
 	if(player->sdir == 1)
     {
         player->px += cos(player->angle + (PI /2)) * 0.9;
             player->py += sin(player->angle + (PI / 2)) * 0.9;
-        if (player->px < 10) player->px = 10;
-            if (player->px > WIDTH - 10) player->px = WIDTH - 10;
-            if (player->py < 10) player->py = 10;
-            if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
+        // if (player->px < 10) player->px = 10;
+        //     if (player->px > WIDTH - 10) player->px = WIDTH - 10;
+        //     if (player->py < 10) player->py = 10;
+        //     if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
     }
     if(player->sdir == -1)
     {
             player->px += cos(player->angle - (PI / 2)) * 0.9;
             player->py += sin(player->angle - (PI / 2)) * 0.9;
-        if (player->px < 10) player->px = 10;
-            if (player->px > WIDTH - 10) player->px = WIDTH - 10;
-            if (player->py < 10) player->py = 10;
-            if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
+        // if (player->px < 10) player->px = 10;
+        //     if (player->px > WIDTH - 10) player->px = WIDTH - 10;
+        //     if (player->py < 10) player->py = 10;
+        //     if (player->py > HEIGHT - 10) player->py = HEIGHT - 10;
     
     }
 
@@ -46,8 +46,10 @@ int loop_hook(t_player *player)
 	if(player->dor == -1)
 		player->angle -= 0.009;
 	memset(player->img->addr, 0, HEIGHT * player->img->line_length); //i guess i can to this with mlx_destroy_image
-	draw_walls(player, player->ray);
-	mlx_put_image_to_window(player->img->mlx, player->img->win, player->img->img, 0, 0);
+    draw_walls(player, player->ray);
+    // draw_grid(player, player->img);
+	// draw_player(player, player->px, player->py, 10, 0xFF0000);
+    mlx_put_image_to_window(player->img->mlx, player->img->win, player->img->img, 0, 0);
 	return (0);
 }
 

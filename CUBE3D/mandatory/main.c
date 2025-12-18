@@ -11,17 +11,27 @@ int	main(int ac, char **av)
 		return (1);
 
 	ray = malloc(RAY_NUM * sizeof(t_ray));
+	if (!ray)
+		return 1;
+
+
 	init_imgs(img);
+	init_player(&player);
 	img[0].map = treat_map(&player, av[1]);
-	if (img[0].map == NULL || check_map(img[0].map) == - 1 || ray == NULL)
+	if (!img[0].map )
 	{
-		ft_free(&player);
 		free(ray);
 		return (1);
 	}
+	if (check_map(img[0].map) == -1)
+	{
+		ft_free(&player);
+		free(ray);
+		return 1;
+	}
 	
 	
-	init_player(&player, img, &ray);
+	fill_player(&player, img, &ray);
 	mlx_tstart(img);
 	init_textures(&player, img);
 	mlx_start(&img[0], WIDTH, HEIGHT);

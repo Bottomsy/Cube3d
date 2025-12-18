@@ -115,7 +115,7 @@ void draw_walls(t_player *player, t_ray *ray)
                 	else
                   	  texturey = ((j * TILESIZE) / wh);
 
-					int color =  pick_text_color(player,i, texturex, texturey);
+					int color =   pick_text_color(player,i, texturex, texturey);
 					color = shade_color_gamma(color, (100 / ray[i].nearest));
 					my_mlx_pixel_put(player->img, x + k, y + j, color);
 

@@ -1,0 +1,10 @@
+map parsing
+- invalid rgb colors              [DONE]  
+- missing F or C                  [DONE]
+- missing one color value         [DONE]
+- empty map                       [DONE]
+- letter in the end of the file   [DONE]
+- missing texture file            [DONE]
+- invalid texture file path       [DONE]
+- invalid texture file format     [DONE]
+- duplicate texture or color info [DONE]

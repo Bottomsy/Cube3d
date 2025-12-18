@@ -2,9 +2,11 @@
 #define CUB3D_H
 
 #define FORMAT ".cub"
+#define TFORMAT ".xpm"
 #define READSIZE 10
 
 #include "../mlx/mlx.h"
+#include "./libft/libft.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -19,6 +21,10 @@
 # define STRIPESIZE 4
 # define PI 3.14159265358979323846
 # define RAY_NUM (WIDTH / STRIPESIZE)
+# define RED "\033[0;31m"
+# define GREEN "\033[0;32m"
+# define BLUE "\033[0;34m"
+# define RESET "\033[0m"
 
 typedef struct s_textures
 {
@@ -26,8 +32,8 @@ typedef struct s_textures
 	char *so;
 	char *we;
 	char *ea;
-	unsigned int c;
-	unsigned int f;
+	int c;
+	int f;
 } t_textures;
 
 typedef struct s_map
@@ -38,11 +44,6 @@ typedef struct s_map
 	int cols;
 } t_map;
 
-typedef struct s_datap
-{
-	t_textures *txrs;
-	t_map *map;
-} t_datap;
 
 typedef struct	s_data {
 	void	*mlx;
@@ -114,8 +115,8 @@ void draw_vertical_line(t_data *img, int x, int color);
 void draw_horizontal_line(t_data *img, int y, int color);
 void draw_grid(t_player *player, t_data *img);
 void draw_walls(t_player *player, t_ray *ray);
-// void draw_player(t_player *player, float x0, float y0, int radius, int color, t_ray *ray);
-// void draw_square(t_data *data, int x, int y, int color);
+void draw_player(t_player *player, float x0, float y0, int radius, int color);
+void draw_square(t_data *data, int x, int y, int color);
 
 /*                                        INPUT HANDLING                                                       */
 int   keypress(int keycode, t_player *player);
@@ -126,32 +127,47 @@ int loop_hook(t_player *player);
 /*                                        MAP PARSING                                                          */
 int check_format(char *map);
 int check_map(char **map);
-int check_boundaries(char **map);
+int check_left_right(char **map);
+int check_up_down(char **map);
 char **treat_map(t_player *player, char *map);
 int fill_textures(t_textures *txtrs, char *info);
-void fill_map(t_map *map, char *info);
+int fill_map(t_map *map, char *info);
 int flfl(char **map, int y, int x);
 int get_rows(char *info);
 int get_cols(char *info);
 int get_biggest(int *arr, int size);
 int get_path(char *info,  char **path, int *elements);
-int get_rgb(char *info, unsigned int *rgb, int *elements);
-int extract_num(char *info, unsigned char *val);
+int get_rgb(char *info,  int *rgb, int *elements);
+int extract_num(char *info, int *val);
 char **split_info(t_player *player, char *info);
 char *read_map(int fd);
 
 /*                                        FREEING                                                              */
 void ft_free(t_player *player);
+void ft_free_map(t_map *map);
+void ft_free_textures(t_textures *textures);
+void ft_free_info(char *info);
+void ft_free_img(t_data *img);
+char **ft_free_parse(t_map *map, t_textures *textures, char *info);
 
 /*                                        INITS                                                                */
-void init_player(t_player *player, t_data img[5], t_ray **ray);
+void init_player(t_player *player);
+void fill_player(t_player *player, t_data img[5], t_ray **ray);
 void init_textures(t_player *player, t_data img[5]);
 void init_imgs(t_data img[5]);
+void init_texts(t_textures *txtrs);
 
 /*                                        MLX HELPER                                                          */
 void print_error(int flag);
 void get_player_info(t_player *player, char **map);
 float get_angle(char d);
 int get_biggest(int *arr, int size);
+
+
+int check_textures(t_textures *texts, t_map *map, char *info);
+int check_rgb(int rgb);
+int check_valid_path(char *path);
+int check_tformat(char *map);
+
 
 #endif
