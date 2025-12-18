@@ -1,14 +1,14 @@
 #include "../cub3d.h"
 
-void init_textures(t_player *player, t_data img[5])
+void	init_textures(t_player *player, t_data img[5])
 {
-	my_mlx_xpm_file_to_image(&img[1],player->textures->no);
-	my_mlx_xpm_file_to_image(&img[2],player->textures->so);
-	my_mlx_xpm_file_to_image(&img[3],player->textures->ea);
-	my_mlx_xpm_file_to_image(&img[4],player->textures->we);
+	my_mlx_xpm_file_to_image(&img[1], player->textures->no);
+	my_mlx_xpm_file_to_image(&img[2], player->textures->so);
+	my_mlx_xpm_file_to_image(&img[3], player->textures->ea);
+	my_mlx_xpm_file_to_image(&img[4], player->textures->we);
 }
 
-void fill_player(t_player *player, t_data img[5], t_ray **ray)
+void	fill_player(t_player *player, t_data img[5], t_ray **ray)
 {
 	player->ray = *ray;
 	get_player_info(player, img[0].map);
@@ -20,9 +20,12 @@ void fill_player(t_player *player, t_data img[5], t_ray **ray)
 	player->ray_num = RAY_NUM;
 }
 
-void init_imgs(t_data img[5])
+void	init_imgs(t_data img[5])
 {
-	for (int i = 1; i < 5; i++)
+	int	i;
+
+	i = 1;
+	while (i < 5)
 	{
 		img[i].mlx = NULL;
 		img[i].img = NULL;
@@ -30,26 +33,26 @@ void init_imgs(t_data img[5])
 		img[i].win = NULL;
 		img[i].map = NULL;
 		img[i].grid = NULL;
+		i++;
 	}
 }
 
-void init_player(t_player *player)
+void	init_player(t_player *player)
 {
-    player->px = 0;
-    player->py = 0;
-    player->angle = 0;
-    player->dir = 0;
-    player->dor = 0;
-    player->sdir = 0;
+	player->px = 0;
+	player->py = 0;
+	player->angle = 0;
+	player->dir = 0;
+	player->dor = 0;
+	player->sdir = 0;
 	player->ray_num = 0;
-    player->img = NULL;
-    player->ray = NULL;
+	player->img = NULL;
+	player->ray = NULL;
 	player->map = NULL;
 	player->textures = NULL;
-
 }
 
-void init_texts(t_textures *txtrs)
+void	init_texts(t_textures *txtrs)
 {
 	txtrs->no = NULL;
 	txtrs->so = NULL;

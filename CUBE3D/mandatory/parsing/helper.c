@@ -1,86 +1,100 @@
 #include "../cub3d.h"
 
-void print_error(int flag)
+void	print_error(int flag)
 {
 	if (flag == 1)
-		printf(RED"Error: Too many players on map\n"RESET);
+		printf(RED "Error: Too many players on map\n" RESET);
 	else if (flag == 2)
-		printf(RED"Error: No players found on map\n"RESET);
+		printf(RED "Error: No players found on map\n" RESET);
 	exit(1);
 }
 
-void ft_free(t_player *player)
+void	ft_free(t_player *player)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    if (player->ray)
-        free(player->ray);
-    ft_free_map(player->map);
-    ft_free_textures(player->textures);
-    while (i < 5)
-        ft_free_img(&player->img[i++]);
-	
+	i = 0;
+	if (player->ray)
+		free(player->ray);
+	ft_free_map(player->map);
+	ft_free_textures(player->textures);
+	while (i < 5)
+		ft_free_img(&player->img[i++]);
 }
 
-void ft_free_map(t_map *map)
+void	ft_free_map(t_map *map)
 {
-    if (map) 
-    {
-        if (map->map) {
-            int r = 0;
-            while (map->map[r])
-            {
-                free(map->map[r]);
-                r++;
-            }
-            free(map->map);
-        }
-        free(map);
-    }
+	int	r;
+
+	r = 0;
+	if (map)
+	{
+		if (map->map)
+		{
+			while (map->map[r])
+			{
+				free(map->map[r]);
+				r++;
+			}
+			free(map->map);
+		}
+		free(map);
+	}
 }
 
-void ft_free_textures(t_textures *textures)
+void	ft_free_textures(t_textures *textures)
 {
-    if (textures) {
-        if (textures->no)
-                 { free(textures->no); textures->no = NULL; }
-        if (textures->so)
-                 { free(textures->so); textures->so = NULL; }
-        if (textures->we)
-                 { free(textures->we); textures->we = NULL; }
-        if (textures->ea)
-                 { free(textures->ea); textures->ea = NULL; }
-                 free(textures);
-    }
-}
-void ft_free_info(char *info)
-{
-    if (info)
-        free(info);
-}
-void ft_free_img(t_data *img)
-{
-    if (img)
-    {
-        if (img->img != NULL && img->mlx != NULL)
-            mlx_destroy_image(img->mlx, img->img);
-
-        if (img->win != NULL && img->mlx != NULL)
-            mlx_destroy_window(img->mlx, img->win);
-
-        if (img->mlx != NULL)
-            mlx_destroy_display(img->mlx);
-
-        if (img->mlx != NULL)
-            free(img->mlx);
-    }
+	if (textures)
+	{
+		if (textures->no)
+		{
+			free(textures->no);
+			textures->no = NULL;
+		}
+		if (textures->so)
+		{
+			free(textures->so);
+			textures->so = NULL;
+		}
+		if (textures->we)
+		{
+			free(textures->we);
+			textures->we = NULL;
+		}
+		if (textures->ea)
+		{
+			free(textures->ea);
+			textures->ea = NULL;
+		}
+		free(textures);
+	}
 }
 
-char **ft_free_parse(t_map *map, t_textures *textures, char *info)
+void	ft_free_info(char *info)
 {
-    ft_free_map(map);
-    ft_free_textures(textures);
-    ft_free_info(info);
-    return NULL;
+	if (info)
+		free(info);
+}
+
+void	ft_free_img(t_data *img)
+{
+	if (img)
+	{
+		if (img->img != NULL && img->mlx != NULL)
+			mlx_destroy_image(img->mlx, img->img);
+		if (img->win != NULL && img->mlx != NULL)
+			mlx_destroy_window(img->mlx, img->win);
+		if (img->mlx != NULL)
+			mlx_destroy_display(img->mlx);
+		if (img->mlx != NULL)
+			free(img->mlx);
+	}
+}
+
+char	**ft_free_parse(t_map *map, t_textures *textures, char *info)
+{
+	ft_free_map(map);
+	ft_free_textures(textures);
+	ft_free_info(info);
+	return (NULL);
 }
