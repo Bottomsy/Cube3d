@@ -129,6 +129,7 @@ int	get_biggest(int *arr, int size)
 			biggest = arr[i];
 		i++;
 	}
+	free(arr);
 	return (biggest);
 }
 
@@ -137,11 +138,16 @@ int	get_cols(char *info)
 	int	i;
 	int	j;
 	int	col;
-	int	cols[get_rows(info)]; // norminette invalid
+	int	*cols;
+	int rows; // norminette invalid
 
 	j = 0;
 	i = 0;
-	while (j < get_rows(info))
+	rows = get_rows(info);
+	if (rows == -1)
+		return (-1);
+	cols = malloc(rows * sizeof(int));
+	while (j < rows)
 	{
 		col = 0;
 		while (info[i] == ' ')
@@ -162,7 +168,7 @@ int	get_cols(char *info)
 			i++;
 		cols[j++] = col;
 	}
-	return (get_biggest(cols, get_rows(info)));
+	return (get_biggest(cols, rows));
 }
 
 int	get_rows(char *info)
@@ -174,11 +180,32 @@ int	get_rows(char *info)
 	i = 0;
 	while (info[i])
 	{
-		if ((info[i] == '\n') && info[i - 1] != '\n')
-			rows++;
+		if ((info[i] == '\n') && i > 0 && (info[i - 1] != '\n'))
+		{
+			int j = i - 1;
+			int only_spaces = 1;
+			while (j >= 0 && info[j] != '\n')
+			{
+				if (info[j] != ' ')
+				{
+					only_spaces = 0;
+					break;
+				}
+				j--;
+			}
+			if (only_spaces)
+			{
+				printf(RED"Error: Empty line in map\n"RESET);
+				return (-1);
+			}
+			if (!only_spaces)
+				rows++;
+		}
+		else if (info[i] == '\n' && i > 0 && (info[i - 1] == '\n'))
+			break;
 		i++;
 	}
-	if (info[i] == '\0' && info[i - 1] != '\n')
+	if (info[i] == '\0' && i > 0 && info[i - 1] != '\n')
 		rows++;
 	return (rows);
 }

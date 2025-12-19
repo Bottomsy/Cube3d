@@ -85,11 +85,11 @@ int	extract_num(char *info, int *val)
 		k++;
 	num = malloc(k + 1);
 	k = 0;
-	while (info[i] != '\n' && info[i] != ',' && info[i] != ' ')
+	while (info[i] != '\n' && info[i] != ',')
 		num[k++] = info[i++];
 	num[k] = '\0';
 	k = 0;
-	if (num[k] < '0' || num[k] > '9')
+	if (num[k] < '0' || num[k] > '9') // to handle non digit chars with ft_atoi
 	{
 		free(num);
 		*val = -1;

@@ -1,5 +1,98 @@
 #include "../cub3d.h"
 
+int	pick_text_color(t_player *player, int i, int x, int y)
+{
+	if (player->ray[i].hitx == player->ray[i].hhitx
+		&& player->ray[i].hity == player->ray[i].hhity)
+	{
+		if ((player->py - player->ray[i].hity) > 0)
+			return (mlx_get_color(&player->img[2], x, y));
+		else
+			return (mlx_get_color(&player->img[1], x, y));
+	}
+	else
+	{
+		if ((player->px - player->ray[i].hitx) > 0)
+			return (mlx_get_color(&player->img[4], x, y));
+		else
+			return (mlx_get_color(&player->img[3], x, y));
+	}
+}
+int	shade_color_gamma(int color, float factor)
+{
+	int	r;
+	int	g;
+	int	b;
+
+	if (factor < 0)
+		factor = 0;
+	if (factor > 1)
+		factor = 1;
+	r = ((color >> 16) & 0xFF) * factor;
+	g = ((color >> 8) & 0xFF) * factor;
+	b = (color & 0xFF) * factor;
+	return ((r << 16) | (g << 8) | b);
+}
+void init_vars(t_player *player, t_ray *ray, int i)
+{
+    if (ray[i].hitx == ray[i].hhitx && ray[i].hity == ray[i].hhity)
+        player->wall_offset = (int)ray[i].hitx % TILESIZE;
+    else
+        player->wall_offset = (int)ray[i].hity % TILESIZE;
+    player->texturex = (int)((player->wall_offset / TILESIZE) * TILESIZE);
+    player->wh = (DPP / (ray[i].nearest * cos(ray[i].angle - player->angle))) * TILESIZE;
+}
+
+void render_ceiling(t_player *player, int x, int height)
+{
+    int j;
+
+    j = 0;
+    while(j < height)
+    {
+        my_mlx_pixel_put(player->img, x, j, player->textures->c);
+        j++;
+    }
+}
+
+void render_floor(t_player *player, int x, int y)
+{
+    while(y < HEIGHT)
+    {
+        my_mlx_pixel_put(player->img, x, y, player->textures->f);
+        y++;
+    }
+}
+
+void render_scene(t_player *player, int i, int x, int y)
+{
+    int k;
+    int j;
+    int color;
+
+    k = 0;
+    while(k < STRIPESIZE)
+    {
+        render_ceiling(player, x + k, y);
+        j = 0;
+        while(j < player->wh )
+        {
+            if (player->wh > HEIGHT)
+                   player->texturey = (((j + (player->wh - HEIGHT) / 2) * TILESIZE) / player->wh);
+            else
+            {
+                  player->texturey = ((j * TILESIZE) / player->wh);
+            }
+            color = pick_text_color(player, i, player->texturex, player->texturey);
+            color = shade_color_gamma(color, (100 / player->ray[i].nearest));
+            my_mlx_pixel_put(player->img, x + k, y + j, color);
+            j++;
+        }
+        render_floor(player, x + k, y + j);
+        k++;
+    }
+}
+
 void	normalizeangle(float *angle)
 {
 	*angle = fmod(*angle, 2.0 * PI);
@@ -32,103 +125,27 @@ void	compare_inter(t_player *player, t_ray *ray, int i)
 	}
 }
 
-int	shade_color_gamma(int color, float factor)
+
+
+void draw_walls(t_player *player, t_ray *ray)
 {
-	int	r;
-	int	g;
-	int	b;
+    int i;
+    int x;
+    int y;
 
-	if (factor < 0)
-		factor = 0;
-	if (factor > 1)
-		factor = 1;
-	r = ((color >> 16) & 0xFF) * factor;
-	g = ((color >> 8) & 0xFF) * factor;
-	b = (color & 0xFF) * factor;
-	return ((r << 16) | (g << 8) | b);
-}
-
-int	pick_text_color(t_player *player, int i, int x, int y)
-{
-	if (player->ray[i].hitx == player->ray[i].hhitx
-		&& player->ray[i].hity == player->ray[i].hhity)
-	{
-		if ((player->py - player->ray[i].hity) > 0)
-			return (mlx_get_color(&player->img[2], x, y));
-		else
-			return (mlx_get_color(&player->img[1], x, y));
-	}
-	else
-	{
-		if ((player->px - player->ray[i].hitx) > 0)
-			return (mlx_get_color(&player->img[4], x, y));
-		else
-			return (mlx_get_color(&player->img[3], x, y));
-	}
-}
-
-void	draw_walls(t_player *player, t_ray *ray)
-{
-	int		i;
-	int		j;
-	float	dpp;
-	int		wh;
-	int		x;
-	int		y;
-	int		k;
-	int		texturex;
-	int		texturey;
-	int		color;
-	float	wall_offset;
-
-	hdda(player, ray);
-	i = 0;
-	dpp = (WIDTH / 2) / tan(FOV / 2);
-	texturex = 0;
-	texturey = 0;
-	while (i < player->ray_num)
-	{
-		if (ray[i].hitx == ray[i].hhitx && ray[i].hity == ray[i].hhity)
-			wall_offset = (int)ray[i].hitx % TILESIZE; // Horizontal wall
-		else
-			wall_offset = (int)ray[i].hity % TILESIZE; // Vertical wall
-		texturex = (int)((wall_offset / TILESIZE) * TILESIZE);
-		wh = (dpp / (ray[i].nearest * cos(ray[i].angle - player->angle)))
-			* TILESIZE;
-		x = (i * STRIPESIZE);
-		if (HEIGHT >= wh)
-			y = (HEIGHT - wh) / 2;
-		else
-			y = 0;
-		k = 0;
-		while (k < STRIPESIZE)
-		{
-			j = 0;
-			while (j < y)
-			{
-				my_mlx_pixel_put(player->img, x + k, j, player->textures->c);
-				j++;
-			}
-			j = 0;
-			while (j < wh)
-			{
-				if (wh > HEIGHT)
-					texturey = (((j + (wh - HEIGHT) / 2) * TILESIZE) / wh);
-				else
-					texturey = ((j * TILESIZE) / wh);
-				color = pick_text_color(player, i, texturex, texturey);
-				color = shade_color_gamma(color, (100 / ray[i].nearest));
-				my_mlx_pixel_put(player->img, x + k, y + j, color);
-				j++;
-			}
-			while (j + y < HEIGHT)
-			{
-				my_mlx_pixel_put(player->img, x + k, y + j,
-					player->textures->f);
-				j++;
-			}
-			k++;
-		}
-		i++;
-	}
+    i = 0;
+    hdda(player, ray);
+    while(i < player->ray_num)
+    {   
+        init_vars(player, ray, i);
+        x = (i * STRIPESIZE);
+        if(HEIGHT >= player->wh)
+            y = (HEIGHT - player->wh) / 2;
+        else 
+            y = 0;
+        render_scene(player, i, x, y);
+        i++;
+    }
+    draw_grid(player, player->img);
+    draw_player(player, (player->px / TILESIZE) * 10, (player->py / TILESIZE) * 10, 4, 0xFF0000);
 }

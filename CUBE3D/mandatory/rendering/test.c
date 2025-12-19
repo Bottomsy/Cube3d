@@ -61,43 +61,43 @@ void draw_horizontal_line(t_data *img, int y, int color)
 
 void draw_grid(t_player *player, t_data *img)
 {
-	int r;
-	int c;
-	int x;
-	int y;
+    int r;
+    int c;
+    int x;
+    int y;
 
-	r = 0;
-	while(r < player->map->rows)
-	{
-		c = 0;
-		while(c < player->map->cols)
-		{
-			x = c * TILESIZE;
-			y = r * TILESIZE;
-			if(player->map->map[r][c] == '1')
-				draw_square(img, x, y, 0xFFFFFF);
-			else if(player->map->map[r][c] == '0')
-				draw_square(img, x, y, 0x000000);
-			c++;
-		}
-		r++;
-	}
+    r = 0;
+    while(r < player->map->rows)
+    {
+        c = 0;
+        while(c < player->map->cols)
+        {
+            x = c * MINIMAP_TILESIZE;
+            y = r * MINIMAP_TILESIZE;
+            if(player->map->map[r][c] == '1')
+                draw_square(img, x, y, 0xFFFFFF);
+            else if(player->map->map[r][c] == '0' || player->map->map[r][c] == 'E' )
+                draw_square(img, x, y, 0x000000);
+            c++;
+        }
+        r++;
+    }
 }
 
 void draw_square(t_data *img, int x, int y, int color)
 {
-	int i;
-	int j;
+    int i;
+    int j;
 
-	i = 1;
-	while(i < TILESIZE - 1)
-	{
-		j = 1;
-		while(j < TILESIZE - 1)
-		{
-			my_mlx_pixel_put(img, x + i, y + j, color);
-			j++;
-		}
-		i++;
-	}
+    i = 1;
+    while(i < MINIMAP_TILESIZE - 1)
+    {
+        j = 1;
+        while(j < MINIMAP_TILESIZE - 1)
+        {
+            my_mlx_pixel_put(img, x + i, y + j, color);
+            j++;
+        }
+        i++;
+    }
 }

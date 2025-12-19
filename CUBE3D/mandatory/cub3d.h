@@ -1,9 +1,11 @@
 #ifndef CUB3D_H
 #define CUB3D_H
 
-#define FORMAT ".cub"
-#define TFORMAT ".xpm"
-#define READSIZE 10
+# define FORMAT ".cub"
+# define TFORMAT ".xpm"
+# define READSIZE 10
+# define TILESIZE 64
+# define MINIMAP_TILESIZE (10)
 
 #include "../mlx/mlx.h"
 #include "./libft/libft.h"
@@ -14,13 +16,13 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-# define TILESIZE 64
 # define HEIGHT 900
 # define WIDTH 1600
 # define FOV 1.0472
 # define STRIPESIZE 4
 # define PI 3.14159265358979323846
 # define RAY_NUM (WIDTH / STRIPESIZE)
+# define DPP (WIDTH / 2) / tan(FOV/2)
 # define RED "\033[0;31m"
 # define GREEN "\033[0;32m"
 # define BLUE "\033[0;34m"
@@ -78,21 +80,25 @@ typedef struct s_ray
 	float	nearest;
 }	t_ray;
 
+// int last_mouse_x;
 typedef struct s_player
 {
     float px;
     float py;
     float angle;
-    // int last_mouse_x;
-    t_data *img;
+    float wall_offset;
     char dir;
     char dor;
-	char sdir;
+    char sdir;
     int ray_num;
+    float wh;
+    int texturex;
+    int texturey;
+    t_data *img;
     t_map *map;
     t_ray *ray;
     t_textures *textures;
-}	t_player;
+}    t_player;
 
 /*                                        MLX HELPER                                                          */
 void   mlx_start(t_data *img, int width, int height);

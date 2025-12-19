@@ -49,8 +49,13 @@ int	fill_textures(t_textures *txtrs, char *info)
 	return (i);
 }
 
-void	pad_map(t_map *map, char *info, int *i, int x, int y)
+void	pad_map(t_map *map, char *info, int *i)
 {
+	int y;
+	int x;
+
+	x = 0;
+	y = 0;
 	while (info[*i] && y < map->rows)
 	{
 		if (x < map->cols)
@@ -75,11 +80,9 @@ void	pad_map(t_map *map, char *info, int *i, int x, int y)
 int	fill_map(t_map *map, char *info)
 {
 	int	i;
-	int	x;
 	int	y;
 	int	j;
 
-	x = 0;
 	y = 0;
 	i = map->map_start;
 	printf("map start index: %d\n", i);
@@ -91,8 +94,12 @@ int	fill_map(t_map *map, char *info)
 		return (0);
 	}
 	map->rows = get_rows(info + i);
+	if (map->rows == -1)
+		return (0);
 	printf("rows: %d\n", map->rows);
 	map->cols = get_cols(info + i);
+	if (map->cols == -1)
+		return (0);
 	printf("cols: %d\n", map->cols);
 	map->map = malloc((map->rows + 1) * sizeof(char *));
 	while (y < map->rows)
@@ -104,8 +111,7 @@ int	fill_map(t_map *map, char *info)
 		y++;
 	}
 	map->map[y] = NULL;
-	y = 0;
-	pad_map(map, info, &i, x, y);
+	pad_map(map, info, &i);
 	while (info[i] && (info[i] == '\n' || info[i] == ' '))
 		i++;
 	if (info[i] != '\0')

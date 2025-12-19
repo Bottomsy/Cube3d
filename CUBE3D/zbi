@@ -8,3 +8,5 @@ map parsing
 - invalid texture file path       [DONE]
 - invalid texture file format     [DONE]
 - duplicate texture or color info [DONE]
+- spaces after rgb value
+- extra info before map           [DONE]
