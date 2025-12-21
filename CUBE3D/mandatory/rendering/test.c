@@ -40,7 +40,7 @@ void draw_player(t_player *player, float x0, float y0, int radius, int color) //
 
 //     player->last_mouse_x = x;
 
-//     memset(player->img->addr, 0, HEIGHT * player->img->line_length);
+//     ft_memset(player->img->addr, 0, HEIGHT * player->img->line_length);
 //     draw_player(player, player->px, player->py, 10, 0x00FF0000, player->ray);
 //     mlx_put_image_to_window(player->img->mlx, player->img->win, player->img->img, 0, 0);
 

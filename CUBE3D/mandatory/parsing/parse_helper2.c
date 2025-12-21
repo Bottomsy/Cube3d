@@ -13,11 +13,11 @@ float	get_angle(char d)
 	return (0);
 }
 
-int check_players(t_player *player,char **map)
+int	check_players(char **map)
 {
-	int i;
-	int j;
-	int pos;
+	int	i;
+	int	j;
+	int	pos;
 
 	i = 0;
 	j = 0;
@@ -38,7 +38,7 @@ int check_players(t_player *player,char **map)
 	}
 	if (pos < 1)
 		return (print_error(2));
-	return 0;
+	return (0);
 }
 
 void	get_player_info(t_player *player, char **map)
@@ -65,35 +65,27 @@ void	get_player_info(t_player *player, char **map)
 	}
 }
 
-char **copy_map(char **mapp)
+char	**copy_map(char **mapp)
 {
-    char **map;
-    int y = 0;
-    int x = 0;
-    int r = 0;
-    int c = 0;
+	char	**map;
+	int		y;
+	int		r;
 
-    while(mapp[y++])
-        r++;
-    y = 0;
-    c = 134;
-    map = malloc(r * sizeof(char *));
-    while(y < r)
-        map[y++] = malloc(c * sizeof(char));
-    y = 0;
-    while(y < r)
-    {
-        x = 0;
-        while(x < c)
-        {
-            map[y][x] = mapp[y][x];
-            x++;
-        }
-        map[y][x] = '\0';
-        y++;
-    }
-    map[y] = NULL;
-    return map;
+	y = 0;
+	r = 0;
+	while (mapp[r])
+		r++;
+	map = malloc((r + 1) * sizeof(char *));
+	if (!map)
+		return (NULL);
+	y = 0;
+	while (y < r)
+	{
+		map[y] = ft_strdup(mapp[y]);
+		y++;
+	}
+	map[y] = NULL;
+	return (map);
 }
 
 int	flfl(char **map, int y, int x)
@@ -135,22 +127,39 @@ int	extract_num(char *info, int *val)
 		num[k++] = info[i++];
 	num[k] = '\0';
 	k = 0;
-	if (num[k] < '0' || num[k] > '9') // to handle non digit chars with ft_atoi
-	{
-		free(num);
-		*val = -1;
-		if (info[i] == ',')
-			i++;
-		return (i);
-	}
-	if (atoi(num) < 0 || atoi(num) > 255)
-		(*val) = -1;
-	else
-		(*val) = atoi(num);
+	*val = ft_atoi(num);
 	free(num);
 	if (info[i] == ',')
 		i++;
 	return (i);
+}
+
+void	*check_read(char *info)
+{
+	printf(RED "Error: Map empty or corrupted\n" RESET);
+	free(info);
+	return (NULL);
+}
+
+void	*ft_malloc(size_t size, t_textures *txtrs, t_map *map, t_player *player, char *info)
+{
+	void	*ptr;
+
+	ptr = malloc(size);
+	if (!ptr)
+	{
+		printf(RED "Error: Memory allocation failed\n" RESET);
+		if (player)
+			ft_free(player);
+		if (map)
+			ft_free_map(map);
+		if (txtrs)
+			ft_free_textures(txtrs);
+		if (info)
+			free(info);
+		exit(EXIT_FAILURE);
+	}
+	return (ptr);
 }
 
 char	*read_map(int fd)
@@ -163,19 +172,21 @@ char	*read_map(int fd)
 
 	final = NULL;
 	bread = 0;
-	b = 0;
-	while ((b = read(fd, tmp, READSIZE)) > 0) // norminette invalid
+	while (1)
 	{
-		tmp[b] = '\0';
-		// gay ass malloc failure handling
-		new = malloc(b + bread + 1);
+		b = read(fd, tmp, READSIZE);
+		if (b <= 0)
+			break ;
+		new = ft_malloc(b + bread + 1, NULL, NULL, NULL, final);
 		if (bread)
-			memcpy(new, final, bread);
-		memcpy(new + bread, tmp, b);
+			ft_memcpy(new, final, bread);
+		ft_memcpy(new + bread, tmp, b);
 		new[b + bread] = '\0';
 		bread += b;
 		free(final);
 		final = new;
 	}
+	if (final == NULL || final[0] == '\0' || b < 0)
+		return (check_read(final));
 	return (final);
 }

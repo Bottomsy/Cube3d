@@ -20,9 +20,9 @@ int	ft_strlcat(char *dst, const char *src, size_t s)
 	size_t	slen;
 
 	i = 0;
-	j = ft_strlen(dst);
-	dlen = ft_strlen(dst);
-	slen = ft_strlen(src);
+	j = strlen(dst);
+	dlen = strlen(dst);
+	slen = strlen(src);
 	if ((dst == NULL && s == 0) || (dst == NULL || dlen >= s))
 	{
 		return (s + slen);

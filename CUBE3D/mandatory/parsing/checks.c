@@ -9,13 +9,11 @@ int	check_format(char *map)
 	k = 0;
 	while (map[i])
 		i++;
-	// error for having no format
 	if (i <= 4)
 		return (0);
 	i -= 4;
 	while (FORMAT[k] && map[i])
 	{
-		// error for not having the wrong format
 		if (FORMAT[k] != map[i])
 			return (0);
 		k++;
@@ -59,7 +57,7 @@ int	check_left_right(char **map)
 	i = 0;
 	while (map[i])
 	{
-		len = (int)strlen(map[i]);
+		len = (int)ft_strlen(map[i]);
 		if (len == 0)
 		{
 			i++;
@@ -75,7 +73,7 @@ int	check_left_right(char **map)
 		}
 		if (map[i][fj] != '1')
 		{
-			printf(RED "Error: Invalid map (left side)\n" RESET);
+			printf(RED "Error: Invalid map\n" RESET);
 			return (-1);
 		}
 		j = fj;
@@ -83,7 +81,7 @@ int	check_left_right(char **map)
 			j++;
 		if (j - 1 < 0 || map[i][j - 1] != '1')
 		{
-			printf(RED "Error: Invalid map (right side)\n" RESET);
+			printf(RED "Error: Invalid map\n" RESET);
 			return (-1);
 		}
 		i++;
@@ -99,7 +97,7 @@ int	check_up_down(char **map)
 	int	fi;
 
 	j = 0;
-	len = strlen(map[0]);
+	len = ft_strlen(map[0]);
 	while (j < len)
 	{
 		fi = 0;
@@ -136,6 +134,8 @@ int	check_map(char **map)
 
 	i = 0;
 	map_copy = copy_map(map);
+	if (!map_copy)
+		return (-1);
 	if (check_left_right(map_copy) == -1 || check_up_down(map_copy) == -1 )
 	{
 		ft_free_map_map(map_copy);

@@ -28,7 +28,7 @@ void ft_free_map_map(char **map)
 
 	if (map)
 	{
-		while (map[r])
+		while (map[r] != NULL)
 		{
 			free(map[r]);
 			r++;

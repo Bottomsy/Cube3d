@@ -50,7 +50,7 @@ int	get_path(char *info, char **path, int *elements)
 	if (info[i + 1] != ' ')
 	{
 		*path = malloc(6);
-		strcpy(*path, "Error");
+		ft_strcpy(*path, "Error");
 		while (info[i] != '\n')
 			i++;
 		i++;
@@ -68,8 +68,6 @@ int	get_path(char *info, char **path, int *elements)
 			i++;
 		return (i);
 	}
-	// while (info[i] != ' ')
-	// 	i++;
 	i++;
 	while (info[i + k] != '\n')
 		k++;

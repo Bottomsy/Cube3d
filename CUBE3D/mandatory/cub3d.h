@@ -173,8 +173,10 @@ int check_textures(t_textures *texts, t_map *map, char *info);
 int check_rgb(int rgb);
 int check_valid_path(char *path);
 int check_tformat(char *map);
-int check_players(t_player *player,char **map);
+int check_players(char **map);
 void ft_free_map_map(char **map);
 char **copy_map(char **mapp);
+void	*check_read(char *info);
+void	*ft_malloc(size_t size, t_textures *txtrs, t_map *map, t_player *player, char *info);
 
 #endif

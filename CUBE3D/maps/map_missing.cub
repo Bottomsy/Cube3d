@@ -1,0 +1,8 @@
+NO ./textures/eagle.xpm
+SO ./textures/wood.xpm
+WE ./textures/redbrick.xpm
+EA ./textures/baysal.xpm
+
+F 20,20,20
+C 200,200,200
+

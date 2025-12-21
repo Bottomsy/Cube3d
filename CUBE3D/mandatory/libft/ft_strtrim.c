@@ -40,7 +40,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 		else
 			break ;
 	}
-	size = ft_strlen(s1);
+	size = strlen(s1);
 	while (size != 0)
 	{
 		if (ft_check_set(s1[size - 1], set) == 1)

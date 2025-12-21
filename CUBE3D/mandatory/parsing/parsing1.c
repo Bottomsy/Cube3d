@@ -129,6 +129,8 @@ char	**split_info(t_player *player, char *info)
 	int			x;
 	int			y;
 
+	if (!info)
+		return (NULL);
 	map = malloc(sizeof(t_map));
 	txtrs = malloc(sizeof(t_textures));
 	init_texts(txtrs);
@@ -140,7 +142,7 @@ char	**split_info(t_player *player, char *info)
 	{
 		return (ft_free_parse(map, txtrs, info));
 	}
-	if (check_map(map->map) == -1 || check_players(player, map->map) == -1)
+	if (check_map(map->map) == -1 || check_players(map->map) == -1)
 	{
 		return (ft_free_parse(map, txtrs, info));
 	}
@@ -169,7 +171,7 @@ char	**treat_map(t_player *player, char *map)
 
 	if (!check_format(map))
 	{
-		printf("Error: Wrong file format\n");
+		printf(RED"Error: Wrong file format\n"RESET);
 		return (NULL);
 	}
 	fd = open(map, O_RDONLY);
