@@ -1,33 +1,56 @@
 CC = cc
 
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -Werror -g
 
-MLX_FLAGS = ./mandatory/libft/libft.a -lmlx -L./mlx/ -lm -lXext -lX11
+LIBFT_DIR = ./mandatory/libft
+LIBFT = $(LIBFT_DIR)/libft.a
 
-SRC_MANDATORY = ./mandatory/mlx.c  ./mandatory/parsing/parsing1.c ./mandatory/main.c ./mandatory/parsing/helper.c \
-  ./mandatory/parsing/checks.c ./mandatory/parsing/inits.c ./mandatory/parsing/parse_helper1.c ./mandatory/parsing/parse_helper2.c \
-  ./mandatory/rendering/dda.c ./mandatory/rendering/mlx_hooks.c ./mandatory/rendering/rend.c ./mandatory/rendering/test.c 
+MLX_DIR = ./mlx
+MLX = $(MLX_DIR)/libmlx.a
+
+MLX_FLAGS = -L$(MLX_DIR) -lmlx -lm -lXext -lX11
+
+SRC_MANDATORY = ./mandatory/mlx.c \
+                ./mandatory/parsing/parsing1.c \
+                ./mandatory/main.c \
+                ./mandatory/parsing/helper.c \
+                ./mandatory/parsing/checks.c \
+                ./mandatory/parsing/inits.c \
+                ./mandatory/parsing/parse_helper1.c \
+                ./mandatory/parsing/parse_helper2.c \
+                ./mandatory/rendering/dda.c \
+                ./mandatory/rendering/mlx_hooks.c \
+                ./mandatory/rendering/rend.c \
+                ./mandatory/rendering/test.c
 
 OBJS_MANDATORY = $(SRC_MANDATORY:.c=.o)
 
 NAME = cub3d
 
-$(NAME): $(OBJS_MANDATORY)
-	$(CC) $(CFLAGS) $(OBJS_MANDATORY) $(MLX_FLAGS) -o $(NAME)
-
 all: $(NAME)
-	make -C ./mandatory/libft
-	make -C ./mlx
+
+$(LIBFT):
+	make -C $(LIBFT_DIR)
+
+$(MLX):
+	make -C $(MLX_DIR)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(NAME): $(LIBFT) $(MLX) $(OBJS_MANDATORY)
+	$(CC) $(CFLAGS) $(OBJS_MANDATORY) $(LIBFT) $(MLX_FLAGS) -o $(NAME)
+
 clean:
+	make clean -C $(LIBFT_DIR)
+	make clean -C $(MLX_DIR)
 	rm -rf $(OBJS_MANDATORY)
 
 fclean: clean
+	make fclean -C $(LIBFT_DIR)
 	rm -rf $(NAME)
 
 re: fclean all
-	make clean
-	./cub3d test.cub
-mandatory: all
 
 .PHONY: all clean fclean re
 
