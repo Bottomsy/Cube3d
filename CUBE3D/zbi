@@ -8,5 +8,7 @@ map parsing
 - invalid texture file path       [DONE]
 - invalid texture file format     [DONE]
 - duplicate texture or color info [DONE]
-- spaces after rgb value
+- spaces after rgb value           
 - extra info before map           [DONE]
+- 0 or more than 2 players 5rat
+- rgb value mlas9a m3a f wla c

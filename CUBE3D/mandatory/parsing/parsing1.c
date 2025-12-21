@@ -31,7 +31,7 @@ int	fill_textures(t_textures *txtrs, char *info)
 					i--;
 				if (info[i - 2] != '\n')
 				{
-					printf(RED "Error: Extra information before map\n" RESET);
+					printf(RED "Error: Multiple maps detected\n" RESET);
 					return (-1);
 				}
 				m = 1;
@@ -116,7 +116,7 @@ int	fill_map(t_map *map, char *info)
 		i++;
 	if (info[i] != '\0')
 	{
-		printf(RED "Error: Extra information after map\n" RESET);
+		printf(RED "Error: Multiple maps detected\n" RESET);
 		return (0);
 	}
 	return (1);
@@ -137,6 +137,10 @@ char	**split_info(t_player *player, char *info)
 	if (check_textures(txtrs, map, info) == -1)
 		return (NULL);
 	if (!fill_map(map, info))
+	{
+		return (ft_free_parse(map, txtrs, info));
+	}
+	if (check_map(map->map) == -1 || check_players(player, map->map) == -1)
 	{
 		return (ft_free_parse(map, txtrs, info));
 	}

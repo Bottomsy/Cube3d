@@ -13,41 +13,87 @@ float	get_angle(char d)
 	return (0);
 }
 
+int check_players(t_player *player,char **map)
+{
+	int i;
+	int j;
+	int pos;
+
+	i = 0;
+	j = 0;
+	pos = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (pos == 2)
+				return (print_error(1));
+			if (map[i][j] == 'S' || map[i][j] == 'N' || map[i][j] == 'W'
+				|| map[i][j] == 'E')
+				pos++;
+			j++;
+		}
+		i++;
+	}
+	if (pos < 1)
+		return (print_error(2));
+	return 0;
+}
+
 void	get_player_info(t_player *player, char **map)
 {
 	int	i;
 	int	j;
-	int	pos;
 
 	i = 0;
-	pos = 0;
 	while (i < player->map->rows)
 	{
 		j = 0;
 		while (j < player->map->cols)
 		{
-			if (pos == 2)
-			{
-				ft_free(player);
-				print_error(1);
-			}
 			if (map[i][j] == 'S' || map[i][j] == 'N' || map[i][j] == 'W'
 				|| map[i][j] == 'E')
 			{
 				player->angle = get_angle(map[i][j]);
 				player->px = ((float)j * TILESIZE) + (TILESIZE / 2);
 				player->py = ((float)i * TILESIZE) + (TILESIZE / 2);
-				pos++;
 			}
 			j++;
 		}
 		i++;
 	}
-	if (pos == 0)
-	{
-		ft_free(player);
-		print_error(2);
-	}
+}
+
+char **copy_map(char **mapp)
+{
+    char **map;
+    int y = 0;
+    int x = 0;
+    int r = 0;
+    int c = 0;
+
+    while(mapp[y++])
+        r++;
+    y = 0;
+    c = 134;
+    map = malloc(r * sizeof(char *));
+    while(y < r)
+        map[y++] = malloc(c * sizeof(char));
+    y = 0;
+    while(y < r)
+    {
+        x = 0;
+        while(x < c)
+        {
+            map[y][x] = mapp[y][x];
+            x++;
+        }
+        map[y][x] = '\0';
+        y++;
+    }
+    map[y] = NULL;
+    return map;
 }
 
 int	flfl(char **map, int y, int x)

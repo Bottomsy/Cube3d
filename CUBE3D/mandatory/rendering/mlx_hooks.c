@@ -19,8 +19,8 @@ void move_vertical(t_player *player, int x, int y)
         y = player->py + sin(player->angle) * 40.9;
         if(can_walk(player, x, y))
         {
-            player->px += cos(player->angle) * 3.9;
-            player->py += sin(player->angle) * 3.9;
+            player->px += cos(player->angle) * 13.9;
+            player->py += sin(player->angle) * 13.9;
         }
     }
     if(player->dir == -1)
@@ -29,8 +29,8 @@ void move_vertical(t_player *player, int x, int y)
         y = player->py - sin(player->angle) * 40.9;
         if(can_walk(player, x, y))
         {
-            player->px -= cos(player->angle) * 3.9;
-            player->py -= sin(player->angle) * 3.9;
+            player->px -= cos(player->angle) * 13.9;
+            player->py -= sin(player->angle) * 13.9;
         }
     }
 }

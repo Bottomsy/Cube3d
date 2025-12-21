@@ -25,6 +25,11 @@ int	check_valid_path(char *path)
 		printf(RED "Error: Missing or duplicate texture path\n" RESET);
 		return (-1);
 	}
+	if (!strcmp(path, "Error"))
+	{
+		printf(RED"Error: No space between identifier and path\n"RESET);
+		return -1;
+	}
 	fd = open(path, O_RDWR);
 	if (fd == -1)
 	{
@@ -40,12 +45,22 @@ int	get_path(char *info, char **path, int *elements)
 	int	i;
 	int	k;
 
-	i = 0;
+	i = 1;
 	k = 0;
+	if (info[i + 1] != ' ')
+	{
+		*path = malloc(6);
+		strcpy(*path, "Error");
+		while (info[i] != '\n')
+			i++;
+		i++;
+		return (i);
+	}
 	if ((*path) != NULL)
 	{
 		free(*path);
 		(*path) = NULL;
+		
 		while (info[i] != ' ')
 			i++;
 		i++;
@@ -53,8 +68,8 @@ int	get_path(char *info, char **path, int *elements)
 			i++;
 		return (i);
 	}
-	while (info[i] != ' ')
-		i++;
+	// while (info[i] != ' ')
+	// 	i++;
 	i++;
 	while (info[i + k] != '\n')
 		k++;
@@ -68,7 +83,20 @@ int	get_path(char *info, char **path, int *elements)
 	(*elements)++;
 	return (i);
 }
-
+int check_fasilat(char *info)
+{
+	int i = 0;
+	int fasila = 0;
+	while (info[i] != '\n')
+	{
+		if (info[i] == ',')
+			fasila++;
+		i++;
+	}
+	if (fasila != 2)
+		return 0;
+	return i;
+}
 int	get_rgb(char *info, int *rgb, int *elements)
 {
 	int	i;
@@ -83,6 +111,13 @@ int	get_rgb(char *info, int *rgb, int *elements)
 	while (info[i] != ' ')
 		i++;
 	i++;
+	if (!check_fasilat(info))
+	{
+		*rgb = -1;
+		while (info[i] != '\n')
+			i++;
+		return (i);
+	}
 	if ((*rgb) != -2)
 	{
 		*rgb = -2;
@@ -139,7 +174,7 @@ int	get_cols(char *info)
 	int	j;
 	int	col;
 	int	*cols;
-	int rows; // norminette invalid
+	int rows;
 
 	j = 0;
 	i = 0;
@@ -155,7 +190,7 @@ int	get_cols(char *info)
 			col++;
 			i++;
 		}
-		while (info[i] && info[i] != '\n' && info[i] != ' ')
+		while (info[i] && info[i] != '\n')
 		{
 			col++;
 			i++;

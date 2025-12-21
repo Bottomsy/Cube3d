@@ -1,12 +1,12 @@
 #include "../cub3d.h"
 
-void	print_error(int flag)
+int	print_error(int flag)
 {
 	if (flag == 1)
 		printf(RED "Error: Too many players on map\n" RESET);
 	else if (flag == 2)
 		printf(RED "Error: No players found on map\n" RESET);
-	exit(1);
+	return -1;
 }
 
 void	ft_free(t_player *player)
@@ -22,24 +22,26 @@ void	ft_free(t_player *player)
 		ft_free_img(&player->img[i++]);
 }
 
-void	ft_free_map(t_map *map)
+void ft_free_map_map(char **map)
 {
-	int	r;
+	int r = 0;
 
-	r = 0;
 	if (map)
 	{
-		if (map->map)
+		while (map[r])
 		{
-			while (map->map[r])
-			{
-				free(map->map[r]);
-				r++;
-			}
-			free(map->map);
+			free(map[r]);
+			r++;
 		}
 		free(map);
 	}
+}
+
+void	ft_free_map(t_map *map)
+{
+	ft_free_map_map(map->map);
+	if (map)
+		free(map);
 }
 
 void	ft_free_textures(t_textures *textures)

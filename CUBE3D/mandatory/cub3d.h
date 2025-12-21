@@ -4,7 +4,7 @@
 # define FORMAT ".cub"
 # define TFORMAT ".xpm"
 # define READSIZE 10
-# define TILESIZE 64
+# define TILESIZE  64
 # define MINIMAP_TILESIZE (10)
 
 #include "../mlx/mlx.h"
@@ -164,16 +164,17 @@ void init_imgs(t_data img[5]);
 void init_texts(t_textures *txtrs);
 
 /*                                        MLX HELPER                                                          */
-void print_error(int flag);
+int print_error(int flag);
 void get_player_info(t_player *player, char **map);
 float get_angle(char d);
 int get_biggest(int *arr, int size);
-
 
 int check_textures(t_textures *texts, t_map *map, char *info);
 int check_rgb(int rgb);
 int check_valid_path(char *path);
 int check_tformat(char *map);
-
+int check_players(t_player *player,char **map);
+void ft_free_map_map(char **map);
+char **copy_map(char **mapp);
 
 #endif

@@ -108,7 +108,7 @@ int	check_up_down(char **map)
 		if (!map[fi])
 		{
 			j++;
-			continue ;
+			continue;
 		}
 		if (map[fi][j] != '1')
 		{
@@ -132,20 +132,26 @@ int	check_map(char **map)
 {
 	int	i;
 	int	j;
+	char **map_copy;
 
 	i = 0;
-	if (check_left_right(map) == -1 || check_up_down(map) == -1)
+	map_copy = copy_map(map);
+	if (check_left_right(map_copy) == -1 || check_up_down(map_copy) == -1 )
+	{
+		ft_free_map_map(map_copy);
 		return (-1);
-	while (map[i])
+	}
+	while (map_copy[i])
 	{
 		j = 0;
-		while (map[i][j])
+		while (map_copy[i][j])
 		{
-			if (map[i][j] == ' ')
+			if (map_copy[i][j] == ' ')
 			{
-				if (flfl(map, i, j))
+				if (flfl(map_copy, i, j))
 				{
 					printf(RED "Error: Invalid map\n" RESET);
+					ft_free_map_map(map_copy);
 					return (-1);
 				}
 			}
@@ -153,6 +159,7 @@ int	check_map(char **map)
 		}
 		i++;
 	}
+	ft_free_map_map(map_copy);
 	return (0);
 }
 
