@@ -37,9 +37,7 @@ int	fill_textures(t_textures *txtrs, char *info)
 				m = 1;
 			}
 			else
-			{
 				return (-1);
-			}
 		}
 		else
 			i++;
@@ -156,8 +154,6 @@ char	**split_info(t_player *player, char *info)
 		y++;
 		x = 0;
 	}
-	printf("%s\n", txtrs->so);
-	printf("%s\n", txtrs->ea);
 	player->map = map;
 	player->textures = txtrs;
 	free(info);
