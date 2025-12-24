@@ -46,27 +46,6 @@ int	check_tformat(char *map)
 	}
 	return (1);
 }
-int tile_not_one(char **map, int i, int fj, int *j)
-{
-	if (map[i][fj] != '1')
-	{
-		printf(RED "Error: Invalid map\n" RESET);
-		return (-1);
-	}
-	*j = fj;
-	return 0;
-}
-
-int error_not_one(char **map, int *i, int j)
-{
-	if (j - 1 < 0 || map[*i][j - 1] != '1')
-	{
-		printf(RED "Error: Invalid map\n" RESET);
-		return (-1);
-	}
-	(*i)++;
-	return (0);
-}
 
 int	check_left_right(char **map)
 {
@@ -92,12 +71,20 @@ int	check_left_right(char **map)
 			i++;
 			continue ;
 		}
-		if(tile_not_one(map, i, fj, &j) == -1)
+		if (map[i][fj] != '1')
+		{
+			printf(RED "Error: Invalid map\n" RESET);
 			return (-1);
+		}
+		j = fj;
 		while (j < len && map[i][j] != ' ')
 			j++;
-		if(error_not_one(map, &i, j) == -1)
-			return -1;
+		if (j - 1 < 0 || map[i][j - 1] != '1')
+		{
+			printf(RED "Error: Invalid map\n" RESET);
+			return (-1);
+		}
+		i++;
 	}
 	return (0);
 }
@@ -139,9 +126,14 @@ int	check_up_down(char **map)
 	return (0);
 }
 
-int check_map_copy(char **map_copy, int *i)
+int	check_map(char **map)
 {
-	*i = 0;
+	int	i;
+	int	j;
+	char **map_copy;
+
+	i = 0;
+	map_copy = copy_map(map);
 	if (!map_copy)
 		return (-1);
 	if (check_left_right(map_copy) == -1 || check_up_down(map_copy) == -1 )
@@ -149,29 +141,6 @@ int check_map_copy(char **map_copy, int *i)
 		ft_free_map_map(map_copy);
 		return (-1);
 	}
-	return 0;
-}
-
-int call_flfl(char **map_copy, int i, int j)
-{
-	if (flfl(map_copy, i, j))
-	{
-		printf(RED "Error: Invalid map\n" RESET);
-		ft_free_map_map(map_copy);
-		return (-1);
-	}
-	return 0;
-}
-
-int	check_map(char **map)
-{
-	int	i;
-	int	j;
-	char **map_copy;
-
-	map_copy = copy_map(map);
-	if(check_map_copy(map_copy, &i) == -1)
-		return -1;
 	while (map_copy[i])
 	{
 		j = 0;
@@ -179,8 +148,12 @@ int	check_map(char **map)
 		{
 			if (map_copy[i][j] == ' ')
 			{
-				if(call_flfl(map_copy, i, j) == -1)
-					return -1;
+				if (flfl(map_copy, i, j))
+				{
+					printf(RED "Error: Invalid map\n" RESET);
+					ft_free_map_map(map_copy);
+					return (-1);
+				}
 			}
 			j++;
 		}

@@ -95,6 +95,19 @@ int check_fasilat(char *info)
 		return 0;
 	return i;
 }
+
+int check_rgb_values(char *info, int *r, int *g, int *b)
+{
+	if (info[0] != '\n')
+		return -1;
+	if (*r == -1 || *g == -1 || *b == -1)
+		return -1;
+	else if (*r == -2 || *g == -2 || *b == -2)
+		return -2;
+	else
+		return ((*r << 16) | (*g << 8) | *b);
+}
+
 int	get_rgb(char *info, int *rgb, int *elements)
 {
 	int	i;
@@ -128,23 +141,7 @@ int	get_rgb(char *info, int *rgb, int *elements)
 	i += extract_num(info + i, &r);
 	i += extract_num(info + i, &g);
 	i += extract_num(info + i, &b);
-	if (info[i] != '\n')
-	{
-		*rgb = -1;
-		return (i);
-	}
-	if (r == -1 || g == -1 || b == -1)
-	{
-		*rgb = -1;
-		return (i);
-	}
-	else if (r == -2 || g == -2 || b == -2)
-	{
-		*rgb = -2;
-		return (i);
-	}
-	else
-		(*rgb) = (r << 16) | (g << 8) | b;
+	*rgb = check_rgb_values(info + i, &r, &g, &b);
 	(*elements)++;
 	return (i);
 }
@@ -166,6 +163,21 @@ int	get_biggest(int *arr, int size)
 	return (biggest);
 }
 
+void count_cols(char *info, int *cols, int *i)
+{
+	while (info[*i] == ' ')
+	{
+		(*cols)++;
+		(*i)++;
+	}
+	while (info[*i] && info[*i] != '\n')
+	{
+		(*cols)++;
+		(*i)++;
+	}
+	
+}
+
 int	get_cols(char *info)
 {
 	int	i;
@@ -183,16 +195,7 @@ int	get_cols(char *info)
 	while (j < rows)
 	{
 		col = 0;
-		while (info[i] == ' ')
-		{
-			col++;
-			i++;
-		}
-		while (info[i] && info[i] != '\n')
-		{
-			col++;
-			i++;
-		}
+		count_cols(info, &col, &i);
 		if (info[i] && info[i] == '\n')
 			i++;
 		while (info[i] && info[i] == ' ')
@@ -203,11 +206,25 @@ int	get_cols(char *info)
 	}
 	return (get_biggest(cols, rows));
 }
-
+void check_only_spaces(char *info, int i, int *only_spaces)
+{
+	*only_spaces = 1;
+	while (i >= 0 && info[i] != '\n')
+	{
+		if (info[i] != ' ')
+		{
+			*only_spaces = 0;
+			break;
+		}
+		i--;
+	}
+}
 int	get_rows(char *info)
 {
 	int i;
 	int rows;
+	int j;
+	int only_spaces;
 
 	rows = 0;
 	i = 0;
@@ -215,22 +232,10 @@ int	get_rows(char *info)
 	{
 		if ((info[i] == '\n') && i > 0 && (info[i - 1] != '\n'))
 		{
-			int j = i - 1;
-			int only_spaces = 1;
-			while (j >= 0 && info[j] != '\n')
-			{
-				if (info[j] != ' ')
-				{
-					only_spaces = 0;
-					break;
-				}
-				j--;
-			}
+			j = i - 1;
+			check_only_spaces(info, j, &only_spaces);
 			if (only_spaces)
-			{
-				printf(RED"Error: Empty line in map\n"RESET);
-				return (-1);
-			}
+				return (printf(RED"Error: Empty line in map\n"RESET), -1);
 			if (!only_spaces)
 				rows++;
 		}

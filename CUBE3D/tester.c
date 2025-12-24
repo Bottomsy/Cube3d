@@ -13,7 +13,7 @@
 # define BLUE "\033[0;34m"
 # define RESET "\033[0m"
 
-#define WAIT_BEFORE_ESC 3
+#define WAIT_BEFORE_ESC 1
 
 void	send_esc_key(void)
 {

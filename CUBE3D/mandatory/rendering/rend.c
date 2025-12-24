@@ -43,12 +43,11 @@ void init_vars(t_player *player, t_ray *ray, int i)
     player->wh = (DPP / (ray[i].nearest * cos(ray[i].angle - player->angle))) * TILESIZE;
 }
 
-void render_ceiling(t_player *player, int x, int height, int *jj)
+void render_ceiling(t_player *player, int x, int height)
 {
     int j;
 
     j = 0;
-    *jj = 0;
     while(j < height)
     {
         my_mlx_pixel_put(player->img, x, j, player->textures->c);
@@ -65,20 +64,6 @@ void render_floor(t_player *player, int x, int y)
     }
 }
 
-void check_wh(t_player *player, int *wh, int *y2, int y)
-{
-    if (player->wh > HEIGHT)
-    {
-        *wh = HEIGHT;
-        *y2 = 0;
-    }
-    else
-    {
-        *wh = player->wh;
-        *y2 = y;
-    }
-}
-
 void render_scene(t_player *player, int i, int x, int y)
 {
     int k;
@@ -88,16 +73,29 @@ void render_scene(t_player *player, int i, int x, int y)
     int y2;
 
     k = 0;
-    check_wh(player, &wh, &y2, y);
+    // int z = 0;
+    if (player->wh > HEIGHT)
+    {
+        wh = HEIGHT;
+        y2 = 0;
+    }
+    else
+    {
+        wh = player->wh;
+        y2 = y;
+    }
     while(k < STRIPESIZE)
     {
-        render_ceiling(player, x + k, y2, &j);
-        while(j < wh)
+        render_ceiling(player, x + k, y2);
+        j = 0;
+        while(j < wh )
         {
             if (player->wh > HEIGHT)
                    player->texturey = (((j + (player->wh - HEIGHT) / 2) * TILESIZE) / player->wh);
             else
+            {
                   player->texturey = ((j * TILESIZE) / player->wh);
+            }
             color = pick_text_color(player, i, player->texturex, player->texturey);
             color = shade_color_gamma(color, (100 / player->ray[i].nearest));
             my_mlx_pixel_put(player->img, x + k, y2 + j, color);
@@ -105,7 +103,12 @@ void render_scene(t_player *player, int i, int x, int y)
         }
         render_floor(player, x + k, y2 + j);
         k++;
+        // z+= 000;
     }
+    // mlx_string_put(player->img->mlx, player->img->win,WIDTH/2, HEIGHT/2,0xFFFFFF,ft_itoa((int)player->ray[RAY_NUM/2].hitx / TILESIZE));
+    // mlx_string_put(player->img->mlx, player->img->win,WIDTH/2 + 20, HEIGHT/2,0xFFFFFF,ft_itoa((int)player->ray[RAY_NUM/2].hity / TILESIZE));
+    // mlx_string_put(player->img->mlx, player->img->win,WIDTH/2, HEIGHT/2 + 20,0xFFFF00,ft_itoa((int)player->px / TILESIZE));
+    // mlx_string_put(player->img->mlx, player->img->win,WIDTH/2 + 20, HEIGHT/2 + 20,0xFFFF00,ft_itoa((int)player->py / TILESIZE));
 }
 
 void	normalizeangle(float *angle)

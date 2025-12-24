@@ -60,4 +60,5 @@ void	init_texts(t_textures *txtrs)
 	txtrs->we = NULL;
 	txtrs->c = -2;
 	txtrs->f = -2;
+	txtrs->elements = 0;
 }

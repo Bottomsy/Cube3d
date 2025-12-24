@@ -36,6 +36,7 @@ typedef struct s_textures
 	char *ea;
 	int c;
 	int f;
+	int elements;
 } t_textures;
 
 typedef struct s_map
@@ -178,5 +179,8 @@ void ft_free_map_map(char **map);
 char **copy_map(char **mapp);
 void	*check_read(char *info);
 void	*ft_malloc(size_t size, t_textures *txtrs, t_map *map, t_player *player, char *info);
+void create_map(t_map *map);
+int fetch_recources(t_textures *txtrs, char *info, int *elements);
+void check_only_spaces(char *info, int i, int *only_spaces);
 
 #endif
