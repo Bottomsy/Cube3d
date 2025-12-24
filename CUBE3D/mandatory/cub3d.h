@@ -180,7 +180,6 @@ int check_tformat(char *map);
 int check_players(char **map);
 void ft_free_map_map(char **map);
 char **copy_map(char **mapp);
-void	*check_read(char *info);
 void	*ft_malloc(t_pointers **ptrs, size_t size);
 void create_map(t_map *map, t_pointers **ptrs);
 int fetch_recources(t_textures *txtrs, char *info, int *elements, t_pointers **ptrs);

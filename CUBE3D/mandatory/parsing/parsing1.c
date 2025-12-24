@@ -1,25 +1,5 @@
 #include "../cub3d.h"
 
-int fetch_recources(t_textures *txtrs, char *info, int *elements, t_pointers **ptrs)
-{
-	int i;
-
-	i = 0;
-	if (info[i] == 'N' && info[i + 1] == 'O')
-		i += get_path(info + i, &txtrs->no, elements, ptrs);
-	else if (info[i] == 'S' && info[i + 1] == 'O')
-		i += get_path(info + i, &txtrs->so, elements, ptrs);
-	else if (info[i] == 'W' && info[i + 1] == 'E')
-		i += get_path(info + i, &txtrs->we, elements, ptrs);
-	else if (info[i] == 'E' && info[i + 1] == 'A')
-		i += get_path(info + i, &txtrs->ea, elements, ptrs);
-	else if (info[i] == 'C')
-		i += get_rgb(info + i, &txtrs->c, elements, ptrs);
-	else if (info[i] == 'F')
-		i += get_rgb(info + i, &txtrs->f, elements, ptrs);
-	return (i);
-}
-
 int	fill_textures(t_textures *txtrs, char *info, t_pointers **ptrs)
 {
 	int	i;
@@ -74,20 +54,6 @@ void	pad_map(t_map *map, char *info, int *i)
 			y++;
 		}
 	}
-}
-void create_map(t_map *map, t_pointers **ptrs)
-{
-	int y;
-
-	y = 0;
-	map->map = ft_malloc(ptrs, (map->rows + 1) * sizeof(char *));
-	while (y < map->rows)
-	{
-		map->map[y] = ft_malloc(ptrs, map->cols + 1);
-		ft_memset(map->map[y], '\0', map->cols + 1);
-		y++;
-	}
-	map->map[y] = NULL;
 }
 
 int	fill_map(t_map *map, char *info, t_pointers **ptrs)
