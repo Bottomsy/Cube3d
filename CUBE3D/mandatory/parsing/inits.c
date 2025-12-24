@@ -11,7 +11,7 @@ void	init_textures(t_player *player, t_data img[5])
 void	fill_player(t_player *player, t_data img[5], t_ray **ray)
 {
 	player->ray = *ray;
-	get_player_info(player, img[0].map);
+	get_player_info(player, player->map->map);
 	player->img = img;
 	// player->last_mouse_x = WIDTH / 2;
 	player->dir = 0;

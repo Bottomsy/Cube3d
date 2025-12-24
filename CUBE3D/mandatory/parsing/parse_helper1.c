@@ -108,6 +108,27 @@ int check_rgb_values(char *info, int *r, int *g, int *b)
 		return ((*r << 16) | (*g << 8) | *b);
 }
 
+int coma_return(char *info, int *i, int **rgb)
+{
+	(*i)++;
+	if (!check_fasilat(info))
+	{
+		**rgb = -1;
+		while (info[*i] != '\n')
+			(*i)++;
+		return (*i);
+	}
+	return (-2);
+}
+
+void init_rgb(int *r, int *g, int *b, int *i)
+{
+	*r = -2;
+	*g = -2;
+	*b = -2;
+	*i = 0;
+}
+
 int	get_rgb(char *info, int *rgb, int *elements)
 {
 	int	i;
@@ -115,20 +136,11 @@ int	get_rgb(char *info, int *rgb, int *elements)
 	int	g;
 	int	b;
 
-	r = -2;
-	g = -2;
-	b = -2;
-	i = 0;
+	init_rgb(&r, &g, &b, &i);
 	while (info[i] != ' ')
 		i++;
-	i++;
-	if (!check_fasilat(info))
-	{
-		*rgb = -1;
-		while (info[i] != '\n')
-			i++;
+	if (coma_return(info, &i, &rgb) != -2)
 		return (i);
-	}
 	if ((*rgb) != -2)
 	{
 		*rgb = -2;

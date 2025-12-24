@@ -13,12 +13,8 @@ int	main(int ac, char **av)
 		return (1);
 	init_imgs(img);
 	init_player(&player);
-	img[0].map = treat_map(&player, av[1]); // change return value of treat_map to int 
-	if (!img[0].map)						// and remove img.map assignment
-	{
-		free(ray);
-		return (1);
-	}
+	if (!treat_map(&player, av[1]))	// and remove img.map assignment
+		return (free(ray), 1);
 	fill_player(&player, img, &ray);
 	mlx_tstart(img);
 	init_textures(&player, img);

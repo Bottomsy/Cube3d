@@ -65,7 +65,7 @@ void	hget_hit(t_player *player, t_ray *ray, int i)
 			if ((floor(ray[i].hhity / TILESIZE) + 1 >= player->map->rows)
 				|| (floor(ray[i].hhitx / TILESIZE) + 1 >= player->map->cols))
 				break ;
-			if (player->img->map[(int)(floor(ray[i].hhity)
+			if (player->map->map[(int)(floor(ray[i].hhity)
 					/ TILESIZE)][(int)floor(ray[i].hhitx) / TILESIZE] == '1')
 					break;
 		
@@ -87,7 +87,7 @@ void	vget_hit(t_player *player, t_ray *ray, int i)
 			if ((floor(ray[i].vhity / TILESIZE) + 1 >= player->map->rows)
 				|| (floor(ray[i].vhitx / TILESIZE) + 1 >= player->map->cols))
 				break ;
-			if (player->img->map[(int)(floor(ray[i].vhity)
+			if (player->map->map[(int)(floor(ray[i].vhity)
 					/ TILESIZE)][(int)(floor(ray[i].vhitx) / TILESIZE)] == '1')
 				break ;
 		

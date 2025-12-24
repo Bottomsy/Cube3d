@@ -47,46 +47,131 @@ int	check_tformat(char *map)
 	return (1);
 }
 
-int	check_left_right(char **map)
+int lrtile_not_one(char **map, int i, int fj, int *j)
 {
-	int	i;
-	int	len;
-	int	fj;
-	int	j;
+        if (map[i][fj] != '1')
+        {
+                printf(RED "Error: Invalid map\n" RESET);
+                return (-1);
+        }
+        *j = fj;
+        return 0;
+}
 
-	i = 0;
-	while (map[i])
-	{
-		len = (int)ft_strlen(map[i]);
-		if (len == 0)
-		{
-			i++;
-			continue ;
-		}
-		fj = 0;
-		while (fj < len && map[i][fj] == ' ')
-			fj++;
-		if (fj >= len)
-		{
-			i++;
-			continue ;
-		}
-		if (map[i][fj] != '1')
-		{
-			printf(RED "Error: Invalid map\n" RESET);
-			return (-1);
-		}
-		j = fj;
-		while (j < len && map[i][j] != ' ')
-			j++;
-		if (j - 1 < 0 || map[i][j - 1] != '1')
-		{
-			printf(RED "Error: Invalid map\n" RESET);
-			return (-1);
-		}
-		i++;
-	}
+int lr_not_one(char **map, int *i, int j)
+{
+        if (j - 1 < 0 || map[*i][j - 1] != '1')
+        {
+                printf(RED "Error: Invalid map\n" RESET);
+                return (-1);
+        }
+        (*i)++;
+        return (0);
+}
+
+
+int check_len(int *len, char **map, int *i, int *fj)
+{
+	*len = (int)ft_strlen(map[*i]);
+    if (*len == 0)
+    {
+        (*i)++;
+        return (1);
+    }
+    *fj = 0;
 	return (0);
+}
+
+int     check_left_right(char **map)
+{
+        int     i;
+        int     len;
+        int     fj;
+        int     j;
+
+        i = 0;
+        while (map[i])
+        {
+            if (check_len(&len, map, &i, &fj))
+                continue;
+            while (fj < len && map[i][fj] == ' ')
+                fj++;
+            if (fj >= len)
+            {
+                i++;
+                continue ;
+            }
+            if(lrtile_not_one(map, i, fj, &j) == -1)
+                return (-1);
+            while (j < len && map[i][j] != ' ')
+                j++;
+            if(lr_not_one(map, &i, j) == -1)
+                return -1;
+        }
+        return (0);
+}
+// int	check_left_right(char **map)
+// {
+// 	int	i;
+// 	int	len;
+// 	int	fj;
+// 	int	j;
+
+// 	i = 0;
+// 	while (map[i])
+// 	{
+// 		len = (int)ft_strlen(map[i]);
+// 		if (len == 0)
+// 		{
+// 			i++;
+// 			continue ;
+// 		}
+// 		fj = 0;
+// 		while (fj < len && map[i][fj] == ' ')
+// 			fj++;
+// 		if (fj >= len)
+// 		{
+// 			i++;
+// 			continue ;
+// 		}
+// 		if (map[i][fj] != '1')
+// 		{
+// 			printf(RED "Error: Invalid map\n" RESET);
+// 			return (-1);
+// 		}
+// 		j = fj;
+// 		while (j < len && map[i][j] != ' ')
+// 			j++;
+// 		if (j - 1 < 0 || map[i][j - 1] != '1')
+// 		{
+// 			printf(RED "Error: Invalid map\n" RESET);
+// 			return (-1);
+// 		}
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+int udtile_not_one(char **map, int *i, int fi, int j)
+{
+	if (map[fi][j] != '1')
+	{
+		printf(RED "Error: Invalid map\n" RESET);
+		return (-1);
+	}
+	*i = fi;
+	return (0);
+}
+
+int ud_not_one(char **map, int i, int *j)
+{
+        if (i - 1 < 0 || map[i - 1][*j] != '1')
+        {
+                printf(RED "Error: Invalid map\n" RESET);
+                return (-1);
+        }
+        (*j)++;
+        return (0);
 }
 
 int	check_up_down(char **map)
@@ -108,20 +193,26 @@ int	check_up_down(char **map)
 			j++;
 			continue;
 		}
-		if (map[fi][j] != '1')
-		{
-			printf(RED "Error: Invalid map\n" RESET);
+		if (udtile_not_one(map, &i, fi, j) == -1)
 			return (-1);
-		}
-		i = fi;
 		while (map[i] && map[i][j] != ' ')
 			i++;
-		if (i - 1 < 0 || map[i - 1][j] != '1')
-		{
-			printf(RED "Error: Invalid map\n" RESET);
+		if (ud_not_one(map, i, &j) == -1)
 			return (-1);
-		}
-		j++;
+	}
+	return (0);
+}
+
+int init_map_copy(char ***map_copy, char **map, int *i)
+{
+	*i = 0;
+	*map_copy = copy_map(map);
+	if (!(*map_copy))
+		return (-1);
+	if (check_left_right(*map_copy) == -1 || check_up_down(*map_copy) == -1)
+	{
+		ft_free_map_map(*map_copy);
+		return (-1);
 	}
 	return (0);
 }
@@ -132,15 +223,8 @@ int	check_map(char **map)
 	int	j;
 	char **map_copy;
 
-	i = 0;
-	map_copy = copy_map(map);
-	if (!map_copy)
+	if (init_map_copy(&map_copy, map, &i) == -1)
 		return (-1);
-	if (check_left_right(map_copy) == -1 || check_up_down(map_copy) == -1 )
-	{
-		ft_free_map_map(map_copy);
-		return (-1);
-	}
 	while (map_copy[i])
 	{
 		j = 0;
@@ -159,8 +243,7 @@ int	check_map(char **map)
 		}
 		i++;
 	}
-	ft_free_map_map(map_copy);
-	return (0);
+	return (ft_free_map_map(map_copy), 0);
 }
 
 int	check_rgb(int rgb)
