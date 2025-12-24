@@ -10,19 +10,16 @@ MLX = $(MLX_DIR)/libmlx.a
 
 MLX_FLAGS = -L$(MLX_DIR) -lmlx -lm -lXext -lX11
 
-SRC_MANDATORY = ./mandatory/mlx.c \
-                ./mandatory/parsing/parsing1.c \
-                ./mandatory/main.c \
-                ./mandatory/parsing/helper.c \
-                ./mandatory/parsing/checks.c \
-                ./mandatory/parsing/inits.c \
-                ./mandatory/parsing/parse_helper1.c \
-                ./mandatory/parsing/parse_helper2.c \
-                ./mandatory/rendering/dda.c \
-                ./mandatory/rendering/mlx_hooks.c \
-                ./mandatory/rendering/rend.c \
-                ./mandatory/rendering/test.c \
-                ./mandatory/parsing/ft_malloc.c
+SRC_MANDATORY = ./mandatory/mlx/mlx_hooks.c ./mandatory/mlx/mlx.c \
+                ./mandatory/parsing/checks.c ./mandatory/parsing/checks2.c \
+                ./mandatory/parsing/checks3.c ./mandatory/parsing/checks4.c \
+                ./mandatory/parsing/fetchers.c ./mandatory/parsing/fetchers2.c \
+                ./mandatory/parsing/ft_malloc.c ./mandatory/parsing/helper.c \
+                ./mandatory/parsing/inits.c ./mandatory/parsing/parse_helper1.c \
+                ./mandatory/parsing/parse_helper2.c ./mandatory/parsing/parsing1.c \
+                ./mandatory/rendering/dda.c ./mandatory/rendering/player_movement.c \
+                ./mandatory/rendering/rend.c ./mandatory/rendering/rend2.c \
+                ./mandatory/rendering/rend3.c ./mandatory/main.c
 
 OBJS_MANDATORY = $(SRC_MANDATORY:.c=.o)
 

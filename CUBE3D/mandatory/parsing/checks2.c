@@ -95,11 +95,11 @@ int	check_up_down(char **map)
 			j++;
 			continue;
 		}
-		if (udtile_not_one(map, &i, fi, j) == -1)
+		if (check_down(map, &i, fi, j) == -1)
 			return (-1);
 		while (map[i] && map[i][j] != ' ')
 			i++;
-		if (ud_not_one(map, i, &j) == -1)
+		if (check_up(map, i, &j) == -1)
 			return (-1);
 	}
 	return (0);
@@ -124,11 +124,11 @@ int     check_left_right(char **map)
                 i++;
                 continue ;
             }
-            if(lrtile_not_one(map, i, fj, &j) == -1)
+            if(check_right(map, i, fj, &j) == -1)
                 return (-1);
             while (j < len && map[i][j] != ' ')
                 j++;
-            if(lr_not_one(map, &i, j) == -1)
+            if(check_left(map, &i, j) == -1)
                 return -1;
         }
         return (0);

@@ -64,7 +64,7 @@ int	check_valid_path(char *path)
 	return (1);
 }
 
-int check_fasilat(char *info)
+int check_commas_num(char *info)
 {
 	int i = 0;
 	int fasila = 0;

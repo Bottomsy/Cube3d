@@ -87,7 +87,6 @@ typedef struct s_ray
 	float	nearest;
 }	t_ray;
 
-// int last_mouse_x;
 typedef struct s_player
 {
     float px;
@@ -117,73 +116,98 @@ void my_mlx_xpm_file_to_image(t_data *img, char *path);
 
 /*                                        CALCULATING                                                          */
 void normalizeangle(float *angle);
+void dda(t_player *player, t_ray *ray);
 void hget_step(t_player *player, t_ray *ray, int i);
-void hget_hit(t_player *player, t_ray *ray, int i);
-void hdda(t_player *player, t_ray *ray);
 void vget_step(t_player *player, t_ray *ray, int i);
+void hget_hit(t_player *player, t_ray *ray, int i);
 void vget_hit(t_player *player, t_ray *ray, int i);
 void compare_inter(t_player *player, t_ray *ray, int i);
 
 /*                                        DRAWING FUNCTIONS                                                    */
-void draw_vertical_line(t_data *img, int x, int color);
-void draw_horizontal_line(t_data *img, int y, int color);
 void draw_grid(t_player *player, t_data *img);
 void draw_walls(t_player *player, t_ray *ray);
 void draw_player(t_player *player, float x0, float y0, int radius, int color);
+void render_scene(t_player *player, int i, int x, int y);
+void render_ceiling(t_player *player, int x, int height);
+void render_floor(t_player *player, int x, int y);
+int pick_text_color(t_player *player, int i, int x, int y);
+int shade_color_gamma(int color, float factor);
 void draw_square(t_data *data, int x, int y, int color);
 
 /*                                        INPUT HANDLING                                                       */
 int   keypress(int keycode, t_player *player);
 int key_release(int code, t_player *player);
 int loop_hook(t_player *player);
-// int mouse_move(int x, int y, t_player *player);
+void move_player(t_player *player);
+void move_vertical(t_player *player, int x, int y);
+int can_walk(t_player *player, int px, int py);
+
 
 /*                                        MAP PARSING                                                          */
-int check_format(char *map);
-int check_map(char **map);
-int check_left_right(char **map);
-int check_up_down(char **map);
 char **treat_map(t_player *player, char *map, t_pointers **ptrs);
+void fill_player(t_player *player, t_data img[5], t_ray **ray, t_pointers **ptrs);
 int fill_textures(t_textures *txtrs, char *info, t_pointers **ptrs);
 int fill_map(t_map *map, char *info, t_pointers **ptrs);
 int flfl(char **map, int y, int x);
+char **split_info(t_player *player, char *info, t_pointers **ptrs);
+char *read_map(int fd, t_pointers **ptrs);
+char **copy_map(char **mapp);
+void create_map(t_map *map, t_pointers **ptrs);
+int coma_return(char *info, int *i, int **rgb);
+void count_cols(char *info, int *cols, int *i);
+void pad_map(t_map *map, char *info, int *i);
+
+
+/*                                        CHECKS                                                               */
+int check_format(char *map);
+int check_tformat(char *map);
+int check_map(char **map);
+int check_left_right(char **map);
+int check_up_down(char **map);
+int check_textures(t_textures *texts, t_map *map);
+int check_rgb(int rgb);
+int check_rgb_values(char *info, int *r, int *g, int *b);
+int check_valid_path(char *path);
+int check_players(char **map);
+void check_only_spaces(char *info, int i, int *only_spaces);
+int check_right(char **map, int i, int fj, int *j);
+int check_left(char **map, int *i, int j);
+int check_down(char **map, int *i, int fi, int j);
+int check_up(char **map, int i, int *j);
+int check_len(int *len, char **map, int *i, int *fj);
+int check_commas_num(char *info);
+void check_wh(t_player *player, int *y2, int *wh, int y);
+int print_error(int flag);
+
+/*                                        FETCHING                                                             */
 int get_rows(char *info);
 int get_cols(char *info, t_pointers **ptrs);
 int get_biggest(int *arr, int size);
 int get_path(char *info,  char **path, int *elements, t_pointers **ptrs);
 int get_rgb(char *info,  int *rgb, int *elements, t_pointers **ptrs);
 int extract_num(char *info, int *val, t_pointers **ptrs);
-char **split_info(t_player *player, char *info, t_pointers **ptrs);
-char *read_map(int fd, t_pointers **ptrs);
-
-/*                                        FREEING                                                              */
-void ft_free(t_player *player);
-void ft_free_img(t_data *img);
-
-/*                                        INITS                                                                */
-void init_player(t_player *player);
-void fill_player(t_player *player, t_data img[5], t_ray **ray, t_pointers **ptrs);
-void init_textures(t_player *player, t_data img[5]);
-void init_imgs(t_data img[5]);
-void init_texts(t_textures *txtrs);
-
-/*                                        MLX HELPER                                                          */
-int print_error(int flag);
 void get_player_info(t_player *player, char **map);
 float get_angle(char d);
 int get_biggest(int *arr, int size);
-
-int check_textures(t_textures *texts, t_map *map);
-int check_rgb(int rgb);
-int check_valid_path(char *path);
-int check_tformat(char *map);
-int check_players(char **map);
-void ft_free_map_map(char **map);
-char **copy_map(char **mapp);
-void	*ft_malloc(t_pointers **ptrs, size_t size);
-void create_map(t_map *map, t_pointers **ptrs);
+int	get_path(char *info, char **path, int *elements, t_pointers **ptrs);
+int	extract_num(char *info, int *val, t_pointers **ptrs);
 int fetch_recources(t_textures *txtrs, char *info, int *elements, t_pointers **ptrs);
-void check_only_spaces(char *info, int i, int *only_spaces);
+
+/*                                        FREEING/MALLOC                                                        */
+void ft_free(t_player *player);
+void ft_free_img(t_data *img);
+void ft_free_map_map(char **map);
+void	*ft_malloc(t_pointers **ptrs, size_t size);
 void lst_free(t_pointers **ptrs);
+int lst_new(t_pointers **ptrs, void *ptr);
+
+/*                                        INITS                                                                */
+void init_player(t_player *player);
+void init_textures(t_player *player, t_data img[5]);
+void init_imgs(t_data img[5]);
+void init_texts(t_textures *txtrs);
+int init_map_copy(char ***map_copy, char **map, int *i);
+void init_rgb(int *r, int *g, int *b, int *i);
+void init_vars(t_player *player, t_ray *ray, int i);
 
 #endif

@@ -1,6 +1,6 @@
 #include "../cub3d.h"
 
-void	hdda(t_player *player, t_ray *ray)
+void	dda(t_player *player, t_ray *ray)
 {
 	int		i;
 	float	rot_angle;

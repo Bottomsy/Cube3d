@@ -3,7 +3,7 @@
 int coma_return(char *info, int *i, int **rgb)
 {
 	(*i)++;
-	if (!check_fasilat(info))
+	if (!check_commas_num(info))
 	{
 		**rgb = -1;
 		while (info[*i] != '\n')
@@ -11,14 +11,6 @@ int coma_return(char *info, int *i, int **rgb)
 		return (*i);
 	}
 	return (-2);
-}
-
-void init_rgb(int *r, int *g, int *b, int *i)
-{
-	*r = -2;
-	*g = -2;
-	*b = -2;
-	*i = 0;
 }
 
 void count_cols(char *info, int *cols, int *i)
@@ -49,4 +41,16 @@ void create_map(t_map *map, t_pointers **ptrs)
 		y++;
 	}
 	map->map[y] = NULL;
+}
+
+void	fill_player(t_player *player, t_data img[5], t_ray **ray, t_pointers **ptrs)
+{
+	player->ray = *ray;
+	get_player_info(player, player->map->map);
+	player->img = img;
+	player->dir = 0;
+	player->dor = 0;
+	player->sdir = 0;
+	player->ray_num = RAY_NUM;
+	player->ptrs = *ptrs;
 }
