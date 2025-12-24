@@ -18,6 +18,7 @@ int	pick_text_color(t_player *player, int i, int x, int y)
 			return (mlx_get_color(&player->img[3], x, y));
 	}
 }
+
 int	shade_color_gamma(int color, float factor)
 {
 	int	r;
@@ -33,6 +34,7 @@ int	shade_color_gamma(int color, float factor)
 	b = (color & 0xFF) * factor;
 	return ((r << 16) | (g << 8) | b);
 }
+
 void init_vars(t_player *player, t_ray *ray, int i)
 {
     if (ray[i].hitx == ray[i].hhitx && ray[i].hity == ray[i].hhity)
@@ -64,6 +66,21 @@ void render_floor(t_player *player, int x, int y)
     }
 }
 
+void check_wh(t_player *player, int *y2, int *wh, int y)
+{
+
+    if (player->wh > HEIGHT)
+    {
+        *wh = HEIGHT;
+        *y2 = 0;
+    }
+    else
+    {
+        *wh = player->wh;
+        *y2 = y;
+    }
+}
+
 void render_scene(t_player *player, int i, int x, int y)
 {
     int k;
@@ -73,17 +90,7 @@ void render_scene(t_player *player, int i, int x, int y)
     int y2;
 
     k = 0;
-    // int z = 0;
-    if (player->wh > HEIGHT)
-    {
-        wh = HEIGHT;
-        y2 = 0;
-    }
-    else
-    {
-        wh = player->wh;
-        y2 = y;
-    }
+    check_wh(player, &y2, &wh, y);
     while(k < STRIPESIZE)
     {
         render_ceiling(player, x + k, y2);
@@ -94,8 +101,7 @@ void render_scene(t_player *player, int i, int x, int y)
                 player->texturey = (((j + (player->wh - HEIGHT) / 2) * TILESIZE) / player->wh);
             else
                 player->texturey = ((j * TILESIZE) / player->wh);
-            color = pick_text_color(player, i, player->texturex, player->texturey);
-            color = shade_color_gamma(color, (100 / player->ray[i].nearest));
+            color = shade_color_gamma(pick_text_color(player, i, player->texturex, player->texturey), (100 / player->ray[i].nearest));
             my_mlx_pixel_put(player->img, x + k, y2 + j, color);
             j++;
         }
@@ -135,8 +141,6 @@ void	compare_inter(t_player *player, t_ray *ray, int i)
 		ray[i].nearest = sqrt(vdx * vdx + vdy * vdy);
 	}
 }
-
-
 
 void draw_walls(t_player *player, t_ray *ray)
 {

@@ -213,6 +213,7 @@ int	get_cols(char *info, t_pointers **ptrs)
 	}
 	return (get_biggest(cols, rows));
 }
+
 void check_only_spaces(char *info, int i, int *only_spaces)
 {
 	*only_spaces = 1;
@@ -226,6 +227,7 @@ void check_only_spaces(char *info, int i, int *only_spaces)
 		i--;
 	}
 }
+
 int	get_rows(char *info)
 {
 	int i;

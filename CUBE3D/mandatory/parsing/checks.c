@@ -110,47 +110,6 @@ int     check_left_right(char **map)
         }
         return (0);
 }
-// int	check_left_right(char **map)
-// {
-// 	int	i;
-// 	int	len;
-// 	int	fj;
-// 	int	j;
-
-// 	i = 0;
-// 	while (map[i])
-// 	{
-// 		len = (int)ft_strlen(map[i]);
-// 		if (len == 0)
-// 		{
-// 			i++;
-// 			continue ;
-// 		}
-// 		fj = 0;
-// 		while (fj < len && map[i][fj] == ' ')
-// 			fj++;
-// 		if (fj >= len)
-// 		{
-// 			i++;
-// 			continue ;
-// 		}
-// 		if (map[i][fj] != '1')
-// 		{
-// 			printf(RED "Error: Invalid map\n" RESET);
-// 			return (-1);
-// 		}
-// 		j = fj;
-// 		while (j < len && map[i][j] != ' ')
-// 			j++;
-// 		if (j - 1 < 0 || map[i][j - 1] != '1')
-// 		{
-// 			printf(RED "Error: Invalid map\n" RESET);
-// 			return (-1);
-// 		}
-// 		i++;
-// 	}
-// 	return (0);
-// }
 
 int udtile_not_one(char **map, int *i, int fi, int j)
 {

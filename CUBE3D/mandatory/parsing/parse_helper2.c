@@ -133,34 +133,6 @@ int	extract_num(char *info, int *val, t_pointers **ptrs)
 	return (i);
 }
 
-void	*check_read(char *info) // unused
-{
-	printf(RED "Error: Map empty or corrupted\n" RESET);
-	free(info);
-	return (NULL);
-}
-
-// void	*ft_malloc(size_t size, t_textures *txtrs, t_map *map, t_player *player, char *info)
-// {
-// 	void	*ptr;
-
-// 	ptr = malloc(size);
-// 	if (!ptr)
-// 	{
-// 		printf(RED "Error: Memory allocation failed\n" RESET);
-// 		if (player)
-// 			ft_free(player);
-// 		if (map)
-// 			ft_free_map(map);
-// 		if (txtrs)
-// 			ft_free_textures(txtrs);
-// 		if (info)
-// 			free(info);
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	return (ptr);
-// }
-
 char	*read_map(int fd, t_pointers **ptrs)
 {
 	char	*new;

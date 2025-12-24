@@ -11,6 +11,7 @@ int can_walk(t_player *player, int px, int py)
         return 0;
     return 1;
 }
+
 void move_vertical(t_player *player, int x, int y)
 {
    if(player->dir == 1)
@@ -34,6 +35,7 @@ void move_vertical(t_player *player, int x, int y)
         }
     }
 }
+
 void move_player(t_player *player)
 {
     int x = 0;
