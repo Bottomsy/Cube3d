@@ -2,20 +2,20 @@
 
 int	main(int ac, char **av)
 {
+	t_pointers	*ptrs;
 	t_data		img[5];
 	t_player	player;
 	t_ray		*ray;
 
 	if (ac < 2 || ac > 3)
 		return (1);
-	ray = malloc(RAY_NUM * sizeof(t_ray));
-	if (!ray)
-		return (1);
+	ptrs = NULL;
+	ray = ft_malloc(&ptrs, RAY_NUM * sizeof(t_ray));
 	init_imgs(img);
 	init_player(&player);
-	if (!treat_map(&player, av[1]))	// and remove img.map assignment
-		return (free(ray), 1);
-	fill_player(&player, img, &ray);
+	if (!treat_map(&player, av[1], &ptrs))
+		return (lst_free(&ptrs), 1);
+	fill_player(&player, img, &ray, &ptrs);
 	mlx_tstart(img);
 	init_textures(&player, img);
 	mlx_start(&img[0], WIDTH, HEIGHT);

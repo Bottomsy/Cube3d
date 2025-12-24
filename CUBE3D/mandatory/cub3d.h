@@ -28,6 +28,12 @@
 # define BLUE "\033[0;34m"
 # define RESET "\033[0m"
 
+typedef struct s_pointers
+{
+	void *ptr;
+	struct s_pointers *next;
+} t_pointers;
+
 typedef struct s_textures
 {
 	char *no;
@@ -99,6 +105,7 @@ typedef struct s_player
     t_map *map;
     t_ray *ray;
     t_textures *textures;
+	t_pointers *ptrs;
 }    t_player;
 
 /*                                        MLX HELPER                                                          */
@@ -136,30 +143,26 @@ int check_format(char *map);
 int check_map(char **map);
 int check_left_right(char **map);
 int check_up_down(char **map);
-char **treat_map(t_player *player, char *map);
-int fill_textures(t_textures *txtrs, char *info);
-int fill_map(t_map *map, char *info);
+char **treat_map(t_player *player, char *map, t_pointers **ptrs);
+int fill_textures(t_textures *txtrs, char *info, t_pointers **ptrs);
+int fill_map(t_map *map, char *info, t_pointers **ptrs);
 int flfl(char **map, int y, int x);
 int get_rows(char *info);
-int get_cols(char *info);
+int get_cols(char *info, t_pointers **ptrs);
 int get_biggest(int *arr, int size);
-int get_path(char *info,  char **path, int *elements);
-int get_rgb(char *info,  int *rgb, int *elements);
-int extract_num(char *info, int *val);
-char **split_info(t_player *player, char *info);
-char *read_map(int fd);
+int get_path(char *info,  char **path, int *elements, t_pointers **ptrs);
+int get_rgb(char *info,  int *rgb, int *elements, t_pointers **ptrs);
+int extract_num(char *info, int *val, t_pointers **ptrs);
+char **split_info(t_player *player, char *info, t_pointers **ptrs);
+char *read_map(int fd, t_pointers **ptrs);
 
 /*                                        FREEING                                                              */
 void ft_free(t_player *player);
-void ft_free_map(t_map *map);
-void ft_free_textures(t_textures *textures);
-void ft_free_info(char *info);
 void ft_free_img(t_data *img);
-char **ft_free_parse(t_map *map, t_textures *textures, char *info);
 
 /*                                        INITS                                                                */
 void init_player(t_player *player);
-void fill_player(t_player *player, t_data img[5], t_ray **ray);
+void fill_player(t_player *player, t_data img[5], t_ray **ray, t_pointers **ptrs);
 void init_textures(t_player *player, t_data img[5]);
 void init_imgs(t_data img[5]);
 void init_texts(t_textures *txtrs);
@@ -170,7 +173,7 @@ void get_player_info(t_player *player, char **map);
 float get_angle(char d);
 int get_biggest(int *arr, int size);
 
-int check_textures(t_textures *texts, t_map *map, char *info);
+int check_textures(t_textures *texts, t_map *map);
 int check_rgb(int rgb);
 int check_valid_path(char *path);
 int check_tformat(char *map);
@@ -178,9 +181,10 @@ int check_players(char **map);
 void ft_free_map_map(char **map);
 char **copy_map(char **mapp);
 void	*check_read(char *info);
-void	*ft_malloc(size_t size, t_textures *txtrs, t_map *map, t_player *player, char *info);
-void create_map(t_map *map);
-int fetch_recources(t_textures *txtrs, char *info, int *elements);
+void	*ft_malloc(t_pointers **ptrs, size_t size);
+void create_map(t_map *map, t_pointers **ptrs);
+int fetch_recources(t_textures *txtrs, char *info, int *elements, t_pointers **ptrs);
 void check_only_spaces(char *info, int i, int *only_spaces);
+void lst_free(t_pointers **ptrs);
 
 #endif

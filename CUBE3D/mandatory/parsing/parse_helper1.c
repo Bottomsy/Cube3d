@@ -1,6 +1,6 @@
 #include "../cub3d.h"
 
-int	check_textures(t_textures *texts, t_map *map, char *line)
+int	check_textures(t_textures *texts, t_map *map)
 {
 	if ((check_valid_path(texts->no) == -1 || check_valid_path(texts->so) == -1
 			|| check_valid_path(texts->ea) == -1
@@ -9,10 +9,7 @@ int	check_textures(t_textures *texts, t_map *map, char *line)
 			|| check_tformat(texts->ea) == -1 || check_tformat(texts->we) == -1)
 		|| (check_rgb(texts->c) == -1 || check_rgb(texts->f) == -1)
 		|| map->map_start == -1)
-	{
-		ft_free_parse(map, texts, line);
 		return (-1);
-	}
 	return (0);
 }
 
@@ -40,7 +37,7 @@ int	check_valid_path(char *path)
 	return (1);
 }
 
-int	get_path(char *info, char **path, int *elements)
+int	get_path(char *info, char **path, int *elements, t_pointers **ptrs)
 {
 	int	i;
 	int	k;
@@ -49,7 +46,7 @@ int	get_path(char *info, char **path, int *elements)
 	k = 0;
 	if (info[i + 1] != ' ')
 	{
-		*path = malloc(6);
+		*path = ft_malloc(ptrs, 6);
 		ft_strcpy(*path, "Error");
 		while (info[i] != '\n')
 			i++;
@@ -58,7 +55,6 @@ int	get_path(char *info, char **path, int *elements)
 	}
 	if ((*path) != NULL)
 	{
-		free(*path);
 		(*path) = NULL;
 		
 		while (info[i] != ' ')
@@ -71,7 +67,7 @@ int	get_path(char *info, char **path, int *elements)
 	i++;
 	while (info[i + k] != '\n')
 		k++;
-	(*path) = malloc(k + 1);
+	(*path) = ft_malloc(ptrs, k + 1);
 	k = 0;
 	while (info[i] == ' ')
 		i++;
@@ -129,7 +125,7 @@ void init_rgb(int *r, int *g, int *b, int *i)
 	*i = 0;
 }
 
-int	get_rgb(char *info, int *rgb, int *elements)
+int	get_rgb(char *info, int *rgb, int *elements, t_pointers **ptrs)
 {
 	int	i;
 	int	r;
@@ -150,9 +146,9 @@ int	get_rgb(char *info, int *rgb, int *elements)
 	}
 	while (info[i] == ' ')
 		i++;
-	i += extract_num(info + i, &r);
-	i += extract_num(info + i, &g);
-	i += extract_num(info + i, &b);
+	i += extract_num(info + i, &r, ptrs);
+	i += extract_num(info + i, &g, ptrs);
+	i += extract_num(info + i, &b, ptrs);
 	*rgb = check_rgb_values(info + i, &r, &g, &b);
 	(*elements)++;
 	return (i);
@@ -171,7 +167,6 @@ int	get_biggest(int *arr, int size)
 			biggest = arr[i];
 		i++;
 	}
-	free(arr);
 	return (biggest);
 }
 
@@ -190,7 +185,7 @@ void count_cols(char *info, int *cols, int *i)
 	
 }
 
-int	get_cols(char *info)
+int	get_cols(char *info, t_pointers **ptrs)
 {
 	int	i;
 	int	j;
@@ -203,7 +198,7 @@ int	get_cols(char *info)
 	rows = get_rows(info);
 	if (rows == -1)
 		return (-1);
-	cols = malloc(rows * sizeof(int));
+	cols = ft_malloc(ptrs, rows * sizeof(int));
 	while (j < rows)
 	{
 		col = 0;

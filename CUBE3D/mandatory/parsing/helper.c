@@ -14,12 +14,9 @@ void	ft_free(t_player *player)
 	int	i;
 
 	i = 0;
-	if (player->ray)
-		free(player->ray);
-	ft_free_map(player->map);
-	ft_free_textures(player->textures);
 	while (i < 5)
 		ft_free_img(&player->img[i++]);
+	lst_free(&player->ptrs);
 }
 
 void ft_free_map_map(char **map)
@@ -37,47 +34,6 @@ void ft_free_map_map(char **map)
 	}
 }
 
-void	ft_free_map(t_map *map)
-{
-	ft_free_map_map(map->map);
-	if (map)
-		free(map);
-}
-
-void	ft_free_textures(t_textures *textures)
-{
-	if (textures)
-	{
-		if (textures->no)
-		{
-			free(textures->no);
-			textures->no = NULL;
-		}
-		if (textures->so)
-		{
-			free(textures->so);
-			textures->so = NULL;
-		}
-		if (textures->we)
-		{
-			free(textures->we);
-			textures->we = NULL;
-		}
-		if (textures->ea)
-		{
-			free(textures->ea);
-			textures->ea = NULL;
-		}
-		free(textures);
-	}
-}
-
-void	ft_free_info(char *info)
-{
-	if (info)
-		free(info);
-}
-
 void	ft_free_img(t_data *img)
 {
 	if (img)
@@ -91,12 +47,4 @@ void	ft_free_img(t_data *img)
 		if (img->mlx != NULL)
 			free(img->mlx);
 	}
-}
-
-char	**ft_free_parse(t_map *map, t_textures *textures, char *info)
-{
-	ft_free_map(map);
-	ft_free_textures(textures);
-	ft_free_info(info);
-	return (NULL);
 }

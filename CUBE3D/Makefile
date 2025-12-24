@@ -21,7 +21,8 @@ SRC_MANDATORY = ./mandatory/mlx.c \
                 ./mandatory/rendering/dda.c \
                 ./mandatory/rendering/mlx_hooks.c \
                 ./mandatory/rendering/rend.c \
-                ./mandatory/rendering/test.c
+                ./mandatory/rendering/test.c \
+                ./mandatory/parsing/ft_malloc.c
 
 OBJS_MANDATORY = $(SRC_MANDATORY:.c=.o)
 

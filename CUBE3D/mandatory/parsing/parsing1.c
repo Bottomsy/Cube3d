@@ -1,26 +1,26 @@
 #include "../cub3d.h"
 
-int fetch_recources(t_textures *txtrs, char *info, int *elements)
+int fetch_recources(t_textures *txtrs, char *info, int *elements, t_pointers **ptrs)
 {
 	int i;
 
 	i = 0;
 	if (info[i] == 'N' && info[i + 1] == 'O')
-		i += get_path(info + i, &txtrs->no, elements);
+		i += get_path(info + i, &txtrs->no, elements, ptrs);
 	else if (info[i] == 'S' && info[i + 1] == 'O')
-		i += get_path(info + i, &txtrs->so, elements);
+		i += get_path(info + i, &txtrs->so, elements, ptrs);
 	else if (info[i] == 'W' && info[i + 1] == 'E')
-		i += get_path(info + i, &txtrs->we, elements);
+		i += get_path(info + i, &txtrs->we, elements, ptrs);
 	else if (info[i] == 'E' && info[i + 1] == 'A')
-		i += get_path(info + i, &txtrs->ea, elements);
+		i += get_path(info + i, &txtrs->ea, elements, ptrs);
 	else if (info[i] == 'C')
-		i += get_rgb(info + i, &txtrs->c, elements);
+		i += get_rgb(info + i, &txtrs->c, elements, ptrs);
 	else if (info[i] == 'F')
-		i += get_rgb(info + i, &txtrs->f, elements);
+		i += get_rgb(info + i, &txtrs->f, elements, ptrs);
 	return (i);
 }
 
-int	fill_textures(t_textures *txtrs, char *info)
+int	fill_textures(t_textures *txtrs, char *info, t_pointers **ptrs)
 {
 	int	i;
 	int	m;
@@ -29,7 +29,7 @@ int	fill_textures(t_textures *txtrs, char *info)
 	m = 0;
 	while (info[i] && !m)
 	{
-		i += fetch_recources(txtrs, info + i, &txtrs->elements);
+		i += fetch_recources(txtrs, info + i, &txtrs->elements, ptrs);
 		if (info[i] == '1' || info[i] == '0')
 		{
 			if (txtrs->elements == 6)
@@ -75,22 +75,22 @@ void	pad_map(t_map *map, char *info, int *i)
 		}
 	}
 }
-void create_map(t_map *map)
+void create_map(t_map *map, t_pointers **ptrs)
 {
 	int y;
 
 	y = 0;
-	map->map = malloc((map->rows + 1) * sizeof(char *));
+	map->map = ft_malloc(ptrs, (map->rows + 1) * sizeof(char *));
 	while (y < map->rows)
 	{
-		map->map[y] = malloc(map->cols + 1);
+		map->map[y] = ft_malloc(ptrs, map->cols + 1);
 		ft_memset(map->map[y], '\0', map->cols + 1);
 		y++;
 	}
 	map->map[y] = NULL;
 }
 
-int	fill_map(t_map *map, char *info)
+int	fill_map(t_map *map, char *info, t_pointers **ptrs)
 {
 	int	i;
 
@@ -102,8 +102,8 @@ int	fill_map(t_map *map, char *info)
 	map->rows = get_rows(info + i);
 	if (map->rows == -1)
 		return (0);
-	map->cols = get_cols(info + i);
-	create_map(map);
+	map->cols = get_cols(info + i, ptrs);
+	create_map(map, ptrs);
 	pad_map(map, info, &i);
 	while (info[i] && (info[i] == '\n' || info[i] == ' '))
 		i++;
@@ -112,31 +112,30 @@ int	fill_map(t_map *map, char *info)
 	return (1);
 }
 
-char	**split_info(t_player *player, char *info)
+char	**split_info(t_player *player, char *info, t_pointers **ptrs)
 {
 	t_map		*map;
 	t_textures	*txtrs;
 
 	if (!info)
 		return (NULL);
-	map = malloc(sizeof(t_map));
-	txtrs = malloc(sizeof(t_textures));
+	map = ft_malloc(ptrs, sizeof(t_map));
+	txtrs = ft_malloc(ptrs, sizeof(t_textures));
 	init_texts(txtrs);
-	map->map_start = fill_textures(txtrs, info);
+	map->map_start = fill_textures(txtrs, info, ptrs);
 	map->map = NULL;
-	if (check_textures(txtrs, map, info) == -1)
+	if (check_textures(txtrs, map) == -1)
 		return (NULL);
-	if (!fill_map(map, info))
-		return (ft_free_parse(map, txtrs, info));
+	if (!fill_map(map, info, ptrs))
+		return (NULL);
 	if (check_map(map->map) == -1 || check_players(map->map) == -1)
-		return (ft_free_parse(map, txtrs, info));
+		return (NULL);
 	player->map = map;
 	player->textures = txtrs;
-	free(info);
 	return (map->map);
 }
 
-char	**treat_map(t_player *player, char *map)
+char	**treat_map(t_player *player, char *map, t_pointers **ptrs)
 {
 	int		fd;
 	char	**res;
@@ -147,7 +146,7 @@ char	**treat_map(t_player *player, char *map)
 		return (NULL);
 	}
 	fd = open(map, O_RDONLY);
-	res = split_info(player, read_map(fd));
+	res = split_info(player, read_map(fd, ptrs), ptrs);
 	close(fd);
 	return (res);
 }

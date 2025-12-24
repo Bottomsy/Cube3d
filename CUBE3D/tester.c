@@ -49,7 +49,9 @@ int	run_map(char *cub3d_path, char *map_path)
 	}
 	if (pid == 0)
 	{
-		execl(cub3d_path, cub3d_path, map_path, NULL);
+		execl("/usr/bin/valgrind", "valgrind", "--leak-check=full", 
+			"--show-leak-kinds=all", "--track-origins=yes",
+			cub3d_path, map_path, NULL);
 		perror("exec");
 		exit(1);
 	}

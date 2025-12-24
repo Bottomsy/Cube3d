@@ -8,7 +8,7 @@ void	init_textures(t_player *player, t_data img[5])
 	my_mlx_xpm_file_to_image(&img[4], player->textures->we);
 }
 
-void	fill_player(t_player *player, t_data img[5], t_ray **ray)
+void	fill_player(t_player *player, t_data img[5], t_ray **ray, t_pointers **ptrs)
 {
 	player->ray = *ray;
 	get_player_info(player, player->map->map);
@@ -18,6 +18,7 @@ void	fill_player(t_player *player, t_data img[5], t_ray **ray)
 	player->dor = 0;
 	player->sdir = 0;
 	player->ray_num = RAY_NUM;
+	player->ptrs = *ptrs;
 }
 
 void	init_imgs(t_data img[5])

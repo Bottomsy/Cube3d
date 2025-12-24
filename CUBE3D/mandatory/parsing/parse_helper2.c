@@ -111,7 +111,7 @@ int	flfl(char **map, int y, int x)
 	return (0);
 }
 
-int	extract_num(char *info, int *val)
+int	extract_num(char *info, int *val, t_pointers **ptrs)
 {
 	char	*num;
 	int		i;
@@ -121,48 +121,47 @@ int	extract_num(char *info, int *val)
 	k = 0;
 	while (info[i + k] != '\n' && info[i + k] != ',')
 		k++;
-	num = malloc(k + 1);
+	num = ft_malloc(ptrs, k + 1);
 	k = 0;
 	while (info[i] != '\n' && info[i] != ',')
 		num[k++] = info[i++];
 	num[k] = '\0';
 	k = 0;
 	*val = ft_atoi(num);
-	free(num);
 	if (info[i] == ',')
 		i++;
 	return (i);
 }
 
-void	*check_read(char *info)
+void	*check_read(char *info) // unused
 {
 	printf(RED "Error: Map empty or corrupted\n" RESET);
 	free(info);
 	return (NULL);
 }
 
-void	*ft_malloc(size_t size, t_textures *txtrs, t_map *map, t_player *player, char *info)
-{
-	void	*ptr;
+// void	*ft_malloc(size_t size, t_textures *txtrs, t_map *map, t_player *player, char *info)
+// {
+// 	void	*ptr;
 
-	ptr = malloc(size);
-	if (!ptr)
-	{
-		printf(RED "Error: Memory allocation failed\n" RESET);
-		if (player)
-			ft_free(player);
-		if (map)
-			ft_free_map(map);
-		if (txtrs)
-			ft_free_textures(txtrs);
-		if (info)
-			free(info);
-		exit(EXIT_FAILURE);
-	}
-	return (ptr);
-}
+// 	ptr = malloc(size);
+// 	if (!ptr)
+// 	{
+// 		printf(RED "Error: Memory allocation failed\n" RESET);
+// 		if (player)
+// 			ft_free(player);
+// 		if (map)
+// 			ft_free_map(map);
+// 		if (txtrs)
+// 			ft_free_textures(txtrs);
+// 		if (info)
+// 			free(info);
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	return (ptr);
+// }
 
-char	*read_map(int fd)
+char	*read_map(int fd, t_pointers **ptrs)
 {
 	char	*new;
 	char	tmp[READSIZE + 1];
@@ -177,16 +176,15 @@ char	*read_map(int fd)
 		b = read(fd, tmp, READSIZE);
 		if (b <= 0)
 			break ;
-		new = ft_malloc(b + bread + 1, NULL, NULL, NULL, final);
+		new = ft_malloc(ptrs, b + bread + 1);
 		if (bread)
 			ft_memcpy(new, final, bread);
 		ft_memcpy(new + bread, tmp, b);
 		new[b + bread] = '\0';
 		bread += b;
-		free(final);
 		final = new;
 	}
 	if (final == NULL || final[0] == '\0' || b < 0)
-		return (check_read(final));
+		return (printf(RED "Error: Map empty or corrupted\n" RESET), NULL);
 	return (final);
 }
