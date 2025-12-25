@@ -19,7 +19,7 @@ SRC_MANDATORY = ./mandatory/mlx/mlx_hooks.c ./mandatory/mlx/mlx.c \
                 ./mandatory/parsing/parse_helper2.c ./mandatory/parsing/parsing1.c \
                 ./mandatory/rendering/dda.c ./mandatory/rendering/player_movement.c \
                 ./mandatory/rendering/rend.c ./mandatory/rendering/rend2.c \
-                ./mandatory/rendering/rend3.c ./mandatory/main.c
+                ./mandatory/parsing/fetchers3.c ./mandatory/rendering/rend3.c ./mandatory/main.c 
 
 OBJS_MANDATORY = $(SRC_MANDATORY:.c=.o)
 
