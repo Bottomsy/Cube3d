@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fetchers2.c                                        :+:      :+:    :+:   */
+/*   fetchers2_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adahab <adahab@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: waissi <waissi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 15:02:05 by waissi            #+#    #+#             */
-/*   Updated: 2025/12/25 15:10:36 by adahab           ###   ########.fr       */
+/*   Updated: 2025/12/25 18:36:03 by waissi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cub3d.h"
+#include "../cub3d_bonus.h"
 
 int	check_error(char *info, t_pointers **ptrs, char **path, int *i)
 {

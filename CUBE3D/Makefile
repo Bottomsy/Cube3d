@@ -10,16 +10,17 @@ MLX = $(MLX_DIR)/libmlx.a
 
 MLX_FLAGS = -L$(MLX_DIR) -lmlx -lm -lXext -lX11
 
-SRC_BONUS = ./bonus/mlx/mlx_hooks.c ./bonus/mlx/mlx.c \
-                ./bonus/parsing/checks.c ./bonus/parsing/checks2.c \
-                ./bonus/parsing/checks3.c ./bonus/parsing/checks4.c \
-                ./bonus/parsing/fetchers.c ./bonus/parsing/fetchers2.c \
-                ./bonus/parsing/ft_malloc.c ./bonus/parsing/helper.c \
-                ./bonus/parsing/inits.c ./bonus/parsing/parse_helper1.c \
-                ./bonus/parsing/parse_helper2.c ./bonus/parsing/parsing1.c \
-                ./bonus/rendering/dda.c ./bonus/rendering/player_movement.c \
-                ./bonus/rendering/rend.c ./bonus/rendering/rend2.c \
-                ./bonus/parsing/fetchers3.c ./bonus/rendering/rend3.c ./bonus/main.c 
+SRC_BONUS = ./bonus/mlx/mlx_hooks_bonus.c ./bonus/mlx/mlx_bonus.c \
+                ./bonus/parsing/checks_bonus.c ./bonus/parsing/checks2_bonus.c \
+                ./bonus/parsing/checks3_bonus.c ./bonus/parsing/checks4_bonus.c \
+                ./bonus/parsing/fetchers_bonus.c ./bonus/parsing/fetchers2_bonus.c \
+                ./bonus/parsing/ft_malloc_bonus.c ./bonus/parsing/helper_bonus.c \
+                ./bonus/parsing/inits_bonus.c ./bonus/parsing/parse_helper1_bonus.c \
+                ./bonus/parsing/parse_helper2_bonus.c ./bonus/parsing/parsing1_bonus.c \
+                ./bonus/rendering/dda_bonus.c ./bonus/rendering/player_movement_bonus.c \
+                ./bonus/rendering/rend_bonus.c ./bonus/rendering/rend2_bonus.c \
+                ./bonus/parsing/fetchers3_bonus.c ./bonus/rendering/rend3_bonus.c ./bonus/main_bonus.c 
+
 
 SRC_MANDATORY = ./mandatory/mlx/mlx_hooks.c ./mandatory/mlx/mlx.c \
                 ./mandatory/parsing/checks.c ./mandatory/parsing/checks2.c \
