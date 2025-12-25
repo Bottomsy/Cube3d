@@ -1,6 +1,6 @@
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -40,7 +40,11 @@ OBJS_MANDATORY = $(SRC_MANDATORY:.c=.o)
 
 NAME = cub3d
 
+NAME_B = cub3d_bonus
+
 all: $(NAME)
+
+bonus: $(NAME_B)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
@@ -54,8 +58,10 @@ $(MLX):
 $(NAME): $(LIBFT) $(MLX) $(OBJS_MANDATORY)
 	$(CC) $(CFLAGS) $(OBJS_MANDATORY) $(LIBFT) $(MLX_FLAGS) -o $(NAME)
 
-bonus: $(LIBFT) $(MLX) $(OBJS_BONUS)
-	$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBFT) $(MLX_FLAGS) -o $(NAME)
+
+$(NAME_B): $(LIBFT) $(MLX) $(OBJS_BONUS)
+	$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBFT) $(MLX_FLAGS) -o $(NAME_B)
+
 
 clean:
 	make clean -C $(LIBFT_DIR)
@@ -64,7 +70,7 @@ clean:
 
 fclean: clean
 	make fclean -C $(LIBFT_DIR)
-	rm -rf $(NAME)
+	rm -rf $(NAME) $(NAME_B)
 
 re: fclean all
 
