@@ -7,7 +7,8 @@ int	can_walk(t_player *player, int px, int py)
 
 	x = px / TILESIZE;
 	y = py / TILESIZE;
-	if (x + 1 > player->map->cols || y + 1 > player->map->rows || x < 0 || y <= 0)
+	if (x + 1 > player->map->cols || y + 1
+		> player->map->rows || x < 0 || y <= 0)
 		return (0);
 	return (1);
 }

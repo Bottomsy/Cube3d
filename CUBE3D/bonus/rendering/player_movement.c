@@ -7,6 +7,9 @@ int	can_walk(t_player *player, int px, int py)
 
 	x = px / TILESIZE;
 	y = py / TILESIZE;
+	if (x + 1 > player->map->cols || y + 1
+		> player->map->rows || x < 0 || y <= 0)
+		return (0);
 	if (player->map->map[y][x] == '1')
 		return (0);
 	return (1);
@@ -44,8 +47,8 @@ void	move_player(t_player *player)
 	move_vertical(player, 0, 0);
 	if (player->sdir == 1)
 	{
-		x = player->px + cos(player->angle + (PI / 2)) * 3.9;
-		y = player->py + sin(player->angle + (PI / 2)) * 3.9;
+		x = player->px + cos(player->angle + (PI / 2)) * 20.9;
+		y = player->py + sin(player->angle + (PI / 2)) * 20.9;
 		if (can_walk(player, x, y))
 		{
 			player->px += cos(player->angle + (PI / 2)) * 5.9;
@@ -54,8 +57,8 @@ void	move_player(t_player *player)
 	}
 	if (player->sdir == -1)
 	{
-		x = player->px + cos(player->angle - (PI / 2)) * 3.9;
-		y = player->py + sin(player->angle - (PI / 2)) * 3.9;
+		x = player->px + cos(player->angle - (PI / 2)) * 20.9;
+		y = player->py + sin(player->angle - (PI / 2)) * 20.9;
 		if (can_walk(player, x, y))
 		{
 			player->px += cos(player->angle - (PI / 2)) * 5.9;
