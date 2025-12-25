@@ -6,7 +6,7 @@
 /*   By: adahab <adahab@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 15:07:06 by waissi            #+#    #+#             */
-/*   Updated: 2025/12/25 15:11:37 by adahab           ###   ########.fr       */
+/*   Updated: 2025/12/25 17:57:59 by adahab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ int						loop_hook(t_player *player);
 void					move_player(t_player *player);
 void					move_vertical(t_player *player, int x, int y);
 int						can_walk(t_player *player, int px, int py);
+int						ft_close(t_player *player);
 
 char					**treat_map(t_player *player, char *map,
 							t_pointers **ptrs);

@@ -6,7 +6,7 @@
 /*   By: adahab <adahab@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 15:03:24 by waissi            #+#    #+#             */
-/*   Updated: 2025/12/25 15:10:55 by adahab           ###   ########.fr       */
+/*   Updated: 2025/12/25 17:56:20 by adahab           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	main(int ac, char **av)
 	mlx_start(&img[0], WIDTH, HEIGHT);
 	mlx_hook(img[0].win, 2, 1L << 0, keypress, &player);
 	mlx_hook(img[0].win, 3, 1L << 1, key_release, &player);
+	mlx_hook(img[0].win, 17, 0, ft_close, &player);
 	mlx_loop_hook(img[0].mlx, loop_hook, &player);
 	mlx_loop(img[0].mlx);
 }
